@@ -1,0 +1,88 @@
+<template>
+
+  <!-- STUDENT NAV -->
+  <v-bottom-navigation density="compact" v-if="isStudent" class="bg-med-grey text-light-grey">
+    <v-btn value="home" :to="{ name: 'StudentHome' }">
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
+    <v-btn value="charts" :to="{ name: 'Charts' }">
+      <v-icon>mdi-chart-box-outline</v-icon>
+    </v-btn>
+    <v-btn value="studentSession" :to="{ name: 'StudentSession' }">
+      <v-icon>mdi-calendar-multiselect</v-icon>
+    </v-btn>
+    <v-btn value="studentSettings" :to="{ name: 'StudentSettings' }">
+      <v-icon>mdi-cog</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
+
+  <!-- ADMIN NAV -->
+  <v-bottom-navigation density="compact" v-if="isAdmin">
+    <v-btn value="studentList" :to="{ name: 'StudentList' }">
+      <v-icon>mdi-account-details</v-icon>
+    </v-btn>
+    <v-btn value="progress" :to="{ name: 'Progress' }">
+      <v-icon>mdi-account-search</v-icon>
+    </v-btn>
+    <v-btn value="session" :to="{ name: 'Session' }">
+      <v-icon>mdi-calendar-plus</v-icon>
+    </v-btn>
+    
+    <v-btn value="human" :to="{ name: 'Human' }">
+      <v-icon>mdi-human</v-icon>
+    </v-btn>
+    <v-btn value="technique" :to="{ name: 'Technique' }">
+      <v-icon>mdi-chess-pawn</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
+
+</template>
+
+<script>
+import { onMounted, ref } from "vue";
+import { logoutUser } from '../services/userService';
+import { useUserStore } from "../store/user";
+
+export default {
+name: "BottomNav",
+
+setup() {
+  // VARIABLES
+  const user = JSON.parse(localStorage.getItem("BJJFocusUser"))
+  const isAdmin = ref(null)
+  const isStudent = ref(null)
+  const userStore = useUserStore()
+
+  // Logout function
+  const logout = async () => {
+    logoutUser();
+    
+    setTimeout(() => {
+      router.push({ name: "Login" });
+    }, 700);
+  };
+
+  // USING PINIA
+  function checkRole() {
+    if (!userStore.user) {
+      return
+    }
+
+    if(userStore.user.role.admin) isAdmin.value = true
+    if(userStore.user.role.student) isStudent.value = true
+  }
+
+  onMounted(() => {
+    checkRole()
+  })
+
+
+  return {
+    user,
+    logout,
+    isAdmin, isStudent
+  };
+},
+
+};
+</script>

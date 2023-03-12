@@ -1,0 +1,43 @@
+{
+  "name": "bjj-app-vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "nodemon backend/server.js",
+    "dev": "concurrently \"npm run server\" \"vite\""
+  },
+  "dependencies": {
+    "@mdi/font": "^7.1.96",
+    "autoprefixer": "^10.4.13",
+    "bcryptjs": "^2.4.3",
+    "chart.js": "^4.2.1",
+    "colors": "^1.4.0",
+    "connect-history-api-fallback": "^2.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mitt": "^3.0.0",
+    "moment": "^2.29.4",
+    "mongoose": "^7.0.1",
+    "pinia": "^2.0.33",
+    "pinia-plugin-persistedstate": "^3.1.0",
+    "postcss": "^8.4.21",
+    "v-calendar": "^3.0.0-alpha.8",
+    "vue": "^3.2.45",
+    "vue-chartkick": "^1.1.0",
+    "vue-router": "^4.1.6",
+    "vuetify": "^3.1.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.21",
+    "tailwindcss": "^3.2.7",
+    "vite": "^4.1.0"
+  }
+}
