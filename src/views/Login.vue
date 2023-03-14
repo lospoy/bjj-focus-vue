@@ -54,7 +54,6 @@ import { useRouter } from "vue-router";
 import Button from "../components/Button.vue";
 import { getHuman } from "../services/humanService";
 import { loginUser } from "../services/userService";
-import { useSessionsStore } from "../store/sessions";
 import { useUserStore } from "../store/user";
 
 export default {
@@ -107,7 +106,6 @@ export default {
 
               useUserStore().setUserDataAndHumanID(userLocal)
               getHumanNameAndId(humanID)
-              useSessionsStore().getAndSetSessionsData(humanID)
             }, 100);
 
             setTimeout(() => {
