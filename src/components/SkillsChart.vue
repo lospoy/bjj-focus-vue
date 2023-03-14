@@ -92,7 +92,7 @@ export default {
     const processSkillData = async() => {
       try {
         const sessions = useSessionsStore().sessions
-        const sessionsAttendedPerTopic = sessions.perTopicQuantity
+        const sessionsAttendedPerTopic = sessions.perTopic
         // ARRAY OF ARRAYS [string, integer]
         // String: that Focus lesson's ID
         // Integer: number of attended sessions that match the string's topic ID
