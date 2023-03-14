@@ -29,7 +29,7 @@ app.use('/api/techniques/variations', require('./routes/bjj_routes/variationRout
 app.use('/api/focusLessons', require('./routes/bjj_routes/focusLessonRoutes'))
 
 // Serve frontend >> *must* be under the API routes
-if(process.env.NODE_ENV === 'production') {
+if(process.env.VITE_NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/dist')))
     // all subdomain requests sent to index.html
     app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '../', '/dist', '/index.html')))
