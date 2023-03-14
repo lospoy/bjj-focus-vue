@@ -122,8 +122,8 @@ export default {
 
     setTimeout(() => {
       const sessions = useSessionsStore().sessions
-      unattendedSessions.value = sessions.unattendedQuantity
-      attendedSessions.value = sessions.attendedQuantity
+      unattendedSessions.value = sessions.unattended
+      attendedSessions.value = sessions.attended
 
       // studentTrainingData.value = store.methods.getStudent().training
       // unattendedSessions.value = studentTrainingData.value.unattendedSessions
