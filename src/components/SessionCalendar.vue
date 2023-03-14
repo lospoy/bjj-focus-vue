@@ -56,13 +56,13 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-import store from "../store/store"
-import { getAllFocusLessons } from "../services/bjj_services/focusLessonService"
-import { getTechnique } from "../services/bjj_services/techniqueService";
-import { getPosition } from "../services/bjj_services/positionService";
+import { reactive, ref } from "vue";
+import { getAllFocusLessons } from "../services/bjj_services/focusLessonService";
 import { getMove } from "../services/bjj_services/moveService";
+import { getPosition } from "../services/bjj_services/positionService";
+import { getTechnique } from "../services/bjj_services/techniqueService";
 import { getVariation } from "../services/bjj_services/variationService";
+import { useSessionsStore } from "../store/sessions";
 
 export default {
   name: "SessionCalendar",
@@ -121,9 +121,13 @@ export default {
     const attributes = ref(null)
 
     setTimeout(() => {
-      studentTrainingData.value = store.methods.getStudent().training
-      unattendedSessions.value = studentTrainingData.value.unattendedSessions
-      attendedSessions.value = studentTrainingData.value.attendedSessions
+      const sessions = useSessionsStore().sessions
+      unattendedSessions.value = sessions.unattendedQuantity
+      attendedSessions.value = sessions.attendedQuantity
+
+      // studentTrainingData.value = store.methods.getStudent().training
+      // unattendedSessions.value = studentTrainingData.value.unattendedSessions
+      // attendedSessions.value = studentTrainingData.value.attendedSessions
 
       // Returns array of promises (attended sessions)
       const attendedPromise = attendedSessions.value.map(async aS => ({
