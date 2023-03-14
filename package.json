@@ -7,6 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "nodemon backend/server.js",
+    "api": "node backend/server.js",
     "dev": "concurrently \"npm run server\" \"vite\""
   },
   "dependencies": {
