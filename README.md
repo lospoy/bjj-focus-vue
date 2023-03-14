@@ -19,7 +19,9 @@
 
 <br>
 
+<p align="center">
 ⚒️CURRENTLY MIGRATING FROM VUE-CLI TO VITE⚒️
+</p>
 
 Learning progress app for combat sports students and instructors
 
