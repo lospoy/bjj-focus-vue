@@ -10,8 +10,9 @@
   <img alt="Express" src="https://img.shields.io/badge/-Express.js-000000?style=for-the-badge&logo=express&logoColor=white" />
   <img alt="Vue" src="https://img.shields.io/badge/-VueJS-42b883?style=for-the-badge&logo=vue.js&logoColor=white" />
   <img alt="Tailwind" src="https://img.shields.io/badge/-Tailwind-499fc4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img alt="Vuetify" src="https://img.shields.io/badge/-Vuetify-aeddff?style=for-the-badge&logo=Vuetify&logoColor=white" />
   <img alt="JavaScript" src="https://img.shields.io/badge/-JavaScript-c4af0e?style=for-the-badge&logo=javascript&logoColor=white" />
-    <img alt="Vite" src="https://img.shields.io/badge/-vite-b23efa?style=for-the-badge&logo=vite&logoColor=white" />
+  <img alt="Vite" src="https://img.shields.io/badge/-vite-b23efa?style=for-the-badge&logo=vite&logoColor=white" />
 </p>
 
 <br>
@@ -19,10 +20,9 @@
 Learning progress app for combat sports students and instructors
 
 - Component-structured SPA with Vue 3, Composition API, and Pinia
-- Designed using UML and the Decorator Pattern
 - Object-based schemas, avoiding “primitive obsession”
 - RESTful API, JWT token authentication
-- Tailwind, PrimeVue and custom UI components
+- Tailwind, Vuetify and custom UI components
 
 
 ✅ Live and active! -> www.bjjfocus.com
