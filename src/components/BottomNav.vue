@@ -11,28 +11,24 @@
     <v-btn value="studentSession" :to="{ name: 'StudentSession' }">
       <v-icon>mdi-calendar-multiselect</v-icon>
     </v-btn>
-    <v-btn value="studentSettings" :to="{ name: 'StudentSettings' }">
+    <v-btn value="Settings" :to="{ name: 'Settings' }">
       <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-bottom-navigation>
 
   <!-- ADMIN NAV -->
-  <v-bottom-navigation density="compact" v-if="isAdmin">
+  <v-bottom-navigation density="compact" v-if="isAdmin" class="bg-at-orange text-light-grey">
+    <v-btn value="overview" :to="{ name: 'Overview' }">
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
     <v-btn value="studentList" :to="{ name: 'StudentList' }">
       <v-icon>mdi-account-details</v-icon>
-    </v-btn>
-    <v-btn value="progress" :to="{ name: 'Progress' }">
-      <v-icon>mdi-account-search</v-icon>
     </v-btn>
     <v-btn value="session" :to="{ name: 'Session' }">
       <v-icon>mdi-calendar-plus</v-icon>
     </v-btn>
-    
-    <v-btn value="human" :to="{ name: 'Human' }">
-      <v-icon>mdi-human</v-icon>
-    </v-btn>
-    <v-btn value="technique" :to="{ name: 'Technique' }">
-      <v-icon>mdi-chess-pawn</v-icon>
+    <v-btn value="Settings" :to="{ name: 'Settings' }">
+      <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-bottom-navigation>
 
@@ -48,7 +44,6 @@ name: "BottomNav",
 
 setup() {
   // VARIABLES
-  const user = JSON.parse(localStorage.getItem("BJJFocusUser"))
   const isAdmin = ref(null)
   const isStudent = ref(null)
   const userStore = useUserStore()
@@ -78,7 +73,6 @@ setup() {
 
 
   return {
-    user,
     logout,
     isAdmin, isStudent
   };
