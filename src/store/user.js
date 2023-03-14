@@ -34,9 +34,17 @@ export const useUserStore = defineStore('data', () => {
     human.value.name.last = payload.last
   }
 
+  function $reset() {
+    user.value = {
+      isLoggedIn: false
+    }
+    human.value = null
+  }
+
   return {
     user, setUserDataAndHumanID,
-    human, setHumanName
+    human, setHumanName,
+    $reset
   }
 }, {
   persist: true
