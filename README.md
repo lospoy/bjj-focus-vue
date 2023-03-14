@@ -16,8 +16,6 @@
 
 <br>
 
-CURRENTLY MIGRATING FROM VUE-CLI TO VITE
-
 Learning progress app for combat sports students and instructors
 
 - Component-structured SPA with Vue 3, Composition API, and Pinia
