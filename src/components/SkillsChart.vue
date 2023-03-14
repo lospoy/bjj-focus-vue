@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import { ref } from "vue"
-import { getFocusLesson } from "../services/bjj_services/focusLessonService"
-import store from "../store/store"
+import { ref } from "vue";
+import { getFocusLesson } from "../services/bjj_services/focusLessonService";
+import { useSessionsStore } from "../store/sessions";
 
 export default {
   name: "SkillsChart",
@@ -91,7 +91,8 @@ export default {
 
     const processSkillData = async() => {
       try {
-        const sessionsAttendedPerTopic = store.methods.getStudent().training.sessionsPerTopic
+        const sessions = useSessionsStore().sessions
+        const sessionsAttendedPerTopic = sessions.perTopicQuantity
         // ARRAY OF ARRAYS [string, integer]
         // String: that Focus lesson's ID
         // Integer: number of attended sessions that match the string's topic ID
