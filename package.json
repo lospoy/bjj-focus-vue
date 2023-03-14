@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "commonjs",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build --target=es2020",
     "preview": "vite preview",
     "server": "nodemon backend/server.js",
     "api": "node backend/server.js",
