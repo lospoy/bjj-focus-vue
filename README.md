@@ -16,12 +16,12 @@
   <img alt="JavaScript" src="https://img.shields.io/badge/-JavaScript-c4af0e?style=for-the-badge&logo=javascript&logoColor=white" />
   <img alt="Vite" src="https://img.shields.io/badge/-vite-b23efa?style=for-the-badge&logo=vite&logoColor=white" />
 </p>
-
-<br>
-
 <p align="center">
 ⚒️CURRENTLY MIGRATING FROM VUE-CLI TO VITE⚒️
 </p>
+<br>
+
+
 
 Learning progress app for combat sports students and instructors
 
