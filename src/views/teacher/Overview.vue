@@ -12,22 +12,23 @@
 
     <!-- Components (cards) -->
     <ThisWeek />
-    <TopicsChart :id='user.human'/>
-    <SkillsChart :id='user.human'/>
+    <TopicsChart :id='humanID' />
+    <SkillsChart :id='humanID' />
     <SessionCalendar />
-    <StudentStats :id='user.human' v-if="user" :title="'My Stats'" />
+    <StudentStats :id='humanID' />
 
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import SessionCalendar from "../../components/SessionCalendar.vue";
 import SkillsChart from '../../components/SkillsChart.vue';
 import StudentStats from "../../components/StudentStats.vue";
 import ThisWeek from '../../components/ThisWeek.vue';
 import TopicsChart from '../../components/TopicsChart.vue';
-import { getHuman } from "../../services/humanService";
+import { useSessionsStore } from '../../store/sessions';
+import { useUserStore } from '../../store/user';
 
 export default {
   name: "overview",
@@ -41,38 +42,19 @@ export default {
   setup() {
     // Variables
     const errorMsg = ref(null);
-    const user = JSON.parse(localStorage.getItem("BJJFocusUser"))
     const humanName = ref(null)
-    const isAdmin = ref(null)
-    const isStudent = ref(null)
-    isAdmin.value = user.role.admin
-    isStudent.value = user.role.student
+    const userStore = useUserStore()
 
-    const getHumanNameAndId = async () => {
-        const res = await getHuman(user.human)
-        humanName.value = res.name.first
-    }
+    // Set user data in Pinia
+    const humanID = userStore.human.id
+    useSessionsStore().getAndSetSessionsData(humanID)
 
-    function loadBottomNav(){
-      let refreshToken = localStorage.getItem('refreshToken')
-
-      if (refreshToken !== '1') {
-        location.reload()
-        localStorage.setItem('refreshToken', '1')
-      }
-    }
-
-    onMounted(() => {
-      getHumanNameAndId()
-      loadBottomNav()
-    })
+    // Set name on DOM
+    humanName.value = userStore.human.name.first
     
     return {
         errorMsg,
-        // STATS
-        humanName, user,
-        // PERMISSIONS
-        isAdmin, isStudent
+        humanName, humanID
     };
   },
 };
