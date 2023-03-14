@@ -27,7 +27,6 @@
 <script>
 import { inject, ref } from "vue"; // inject is required for the emitter (EventBus)
 import SessionCalendar from "../../components/SessionCalendar.vue";
-import SessionLog from "../../components/SessionLog.vue";
 import Switcher from '../../components/Switcher.vue';
 
 
@@ -35,7 +34,6 @@ export default {
   name: "sstudentSession",
   components: {
     SessionCalendar,
-    SessionLog,
     Switcher
   },
   setup() {
