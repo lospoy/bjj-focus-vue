@@ -31,6 +31,7 @@
 import { ref } from "vue";
 import StudentStats from '../../components/StudentStats.vue';
 import ThisWeek from '../../components/ThisWeek.vue';
+import { useSessionsStore } from "../../store/sessions";
 import { useUserStore } from "../../store/user";
 
 export default {
@@ -52,6 +53,13 @@ export default {
       humanName.value = userStore.human.name.first
     }
     checkHumanName()
+
+    // Fetches updated session data every time the user visits the student/home route
+    // Ideally session data would be semi-persistent:
+    //   session data fetched either on login or in student/home,
+    //   but only if it has not been fetched within the last 30 min
+    const humanID = userStore.human.id
+    useSessionsStore().getAndSetSessionsData(humanID)
     
     return {
         errorMsg,
