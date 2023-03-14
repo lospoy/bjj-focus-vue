@@ -32,3 +32,9 @@ Learning progress app for combat sports students and instructors
 
 
 ✅ Live and active! -> www.bjjfocus.com
+
+
+To run locally first install:
+`` npm i ``
+Then start both the backend and frontend:
+`` npm run dev ``
