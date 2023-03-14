@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import Settings from "../views/Settings.vue";
 import Charts from "../views/student/Charts.vue";
 import PrivateClass from "../views/student/PrivateClass.vue";
 import StudentHome from "../views/student/StudentHome.vue";
 import StudentSession from "../views/student/StudentSession.vue";
-import StudentSettings from "../views/student/StudentSettings.vue";
 import Human from "../views/teacher/Human.vue";
 import Overview from "../views/teacher/Overview.vue";
 import Session from "../views/teacher/Session.vue";
@@ -23,6 +23,11 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
   },
 
   // ADMIN ROUTES
@@ -72,11 +77,6 @@ const routes = [
     path: "/student/session",
     name: "StudentSession",
     component: StudentSession,
-  },
-  {
-    path: "/student/settings",
-    name: "StudentSettings",
-    component: StudentSettings,
   },
 ];
 
