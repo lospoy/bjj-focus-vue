@@ -1,9 +1,10 @@
 const mongoose = require('mongoose') 
 mongoose.set('strictQuery', true)
+const mongoURI = process.env.VITE_MONGO_URI
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect('mongodb+srv://carlos:KUw4BwEw4fSjJ3J5HUA9@clusterbjj.o8jxer4.mongodb.net/?retryWrites=true&w=majority')
+        const conn = await mongoose.connect(mongoURI)
         
         console.log(`MongoDB connected: ${conn.connection.host}`.cyan.underline)
     } catch (error) {
