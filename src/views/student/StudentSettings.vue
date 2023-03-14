@@ -33,7 +33,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { getHuman } from "../../services/humanService";
 import { logoutUser } from "../../services/userService";
-import store from "../../store/store";
+import { useUserStore } from '../../store/user';
 
 export default {
 name: "StudentSettings",
@@ -52,11 +52,9 @@ setup() {
 
   // Logout function
   const logout = () => {
-    logoutUser();
-    
-    setTimeout(() => {
-      store.methods.setUser(user)
-    }, 200);
+    logoutUser() // localStorage.removeItem("BJJFocusUser");
+
+    useUserStore().$reset()
 
     setTimeout(() => {
       router.push({ name: "Login" });
