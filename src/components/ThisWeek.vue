@@ -103,9 +103,13 @@ export default {
     
     onMounted(async() => {
       setRole()
-      if (role.admin || role.teacher) {
-        const currentTopicSkills = await getSkills(currentTopicId)
-        populateSkillsList(currentTopicSkills)
+      try {
+        if (role.admin || role.teacher) {
+          const currentTopicSkills = await getSkills(currentTopicId)
+          populateSkillsList(currentTopicSkills)
+        }
+      } catch (error) {
+        console.log(error)
       }
     })
 
