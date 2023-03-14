@@ -11,9 +11,9 @@ export const useSessionsStore = defineStore('sessions', () => {
     latest: '',
     daysSinceLatest: '',
     weeksTrained: '',
-    attendedQuantity: '',
-    unattendedQuantity: '',
-    perTopicQuantity: ''
+    attended: '',
+    unattended: '',
+    perTopic: ''
   })
 
   async function getAndSetSessionsData(humanID) {
@@ -45,13 +45,13 @@ export const useSessionsStore = defineStore('sessions', () => {
     const sessionsPerTopic = arr
 
     sessions.value.all = allSessions
-    sessions.value.attendedQuantity = sessionsAttended
-    sessions.value.unattendedQuantity = sessionsUnattended
+    sessions.value.attended = sessionsAttended
+    sessions.value.unattended = sessionsUnattended
     sessions.value.focus = focusSessions
     sessions.value.first = firstSession
     sessions.value.latest = latestSessionAttended.when.date
     sessions.value.daysSinceLatest = daysSinceLatestSession
-    sessions.value.perTopicQuantity = sessionsPerTopic
+    sessions.value.perTopic = sessionsPerTopic
     sessions.value.weeksTrained = weeksTrained
   }
 
