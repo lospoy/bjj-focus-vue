@@ -100,7 +100,7 @@ export default {
     }
 
     const getLessonData = async() => {
-      const sessions = useSessionsStore.sessions
+      const sessions = useSessionsStore().sessions
       const sessionsPerTopic = sessions.perTopicQuantity
 
       sessionsPerTopic.find(e => e[0] === backControl) ? '' : sessionsPerTopic.push([backControl, 0])
