@@ -13,7 +13,7 @@
     <i
       class="fa mr-2"
       :class="{
-        'fa-check-square text-at-faint-orange rounded': checked,
+        'fa-check-square text-gold rounded': checked,
         'fa-square text-light-grey rounded': !checked,
       }"
     ></i>
