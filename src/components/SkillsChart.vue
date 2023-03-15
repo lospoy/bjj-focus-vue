@@ -3,7 +3,12 @@
 
           <bar-chart
             :data="skillData"
-            :dataset="{barThickness: 40, borderRadius: 5, borderWidth: 0, backgroundColor:'#3957BF'}"
+            :dataset="{
+              barThickness: 40,
+              borderRadius: 5,
+              borderWidth: 0,
+              backgroundColor:'#B130D990'
+            }"
             :library="chartOptions"
           >
           </bar-chart>
