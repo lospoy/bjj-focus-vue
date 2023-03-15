@@ -58,6 +58,7 @@ Then start both the backend and frontend:
 `` npm run dev ``
 
 ## Credits
-- Credit to [AryanJ](https://github.com/AryanJ-NYC) for the swift technical help and advice.   
-- Thanks to [Ju L](https://www.linkedin.com/in/julliardlin) for ALL argument, technique hierarchy and functionality, and project management.
+- Credit to [AryanJ](https://github.com/AryanJ-NYC) for the swift technical help and advice.
+- Thanks to [Salvador G](https://www.linkedin.com/in/salvador-gonz%C3%A1lez-garc%C3%ADa-548268175/) for his support, design patterns expertise, and UML diagrams.
+- Thanks to [Ju L](https://www.linkedin.com/in/julliardlin) for ALL argument, data hierarchy and functionality, and project management.
 
