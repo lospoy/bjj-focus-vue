@@ -3,7 +3,13 @@
       
         <bar-chart
           :data="topicData"
-          :dataset="{barThickness: 30, borderRadius: 3, borderWidth: 0, backgroundColor:'#347C94'}"
+          :dataset="{
+            barThickness: 30,
+            borderRadius: 3,
+            borderWidth: 0,
+            backgroundColor:'#d8c93b95',
+            color:'#292c2d'
+          }"
           :library="chartOptions"
         >
         </bar-chart>
