@@ -30,7 +30,6 @@
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7",
     "v-calendar": "^3.0.0-alpha.8",
-    "vite": "^4.1.4",
     "vue": "^3.2.45",
     "vue-chartkick": "^1.1.0",
     "vue-router": "^4.1.6",
@@ -39,6 +38,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "concurrently": "^7.6.0",
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "vite": "^4.1.4"
   }
 }
