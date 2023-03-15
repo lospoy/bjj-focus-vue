@@ -17,20 +17,31 @@
   <img alt="Vite" src="https://img.shields.io/badge/-vite-b23efa?style=for-the-badge&logo=vite&logoColor=white" />
 </p>
 
-<div align="center">
-✅ Live and active! -> www.bjjfocus.com
-</div>
+<p align="center">
+  <a href="https://bjjfocus.com">Live Site</a> •
+  <a href="#about-the-project">About The Project</a> •
+  <a href="#tech-details">Tech Details</a> •
+  <a href="#example-screens">Example Screens</a> •
+  <a href="#local-installation">Local Installation</a> •
+  <a href="#credits">Credits</a>
+</p>
 
+## About The Project
+BJJ Focus is an Edtech App for combat sports students and instructors, currently used by [Gentle Art Studio](https://www.gentleartstudio.com/) in NYC. It helps teachers and students keep track of attendance, curriculum creation, and progress.
 
-# 
-Learning progress app for combat sports students and instructors
-
+## Tech Details
 - Component-structured SPA with Vue 3, Composition API, and Pinia
 - Object-based schemas, avoiding “primitive obsession”
 - RESTful API, JWT token authentication
 - Tailwind, Vuetify and custom UI components
 
-# 
+## Example Screens
+User screens
+<div align="center">
+    <img src="https://u.cubeupload.com/aa9988vvb/focususerscreens.png" width="100%">
+</div>
+
+## Local Installation
 To run locally first install:
 <br>
 `` npm i ``
@@ -38,3 +49,8 @@ To run locally first install:
 Then start both the backend and frontend:
 <br>
 `` npm run dev ``
+
+## Credits
+- Credit to [AryanJ](https://github.com/AryanJ-NYC) for the swift technical help and advice.   
+- Thanks to [Ju L](https://www.linkedin.com/in/julliardlin) for ALL argument, technique hierarchy and functionality, and project management.
+
