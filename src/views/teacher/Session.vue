@@ -14,21 +14,21 @@
         </div>
 
         <!-- SAVE SESSION -->
-        <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
+        <div class="p-8 flex items-start bg-dark-grey rounded-md shadow-lg">
             <!-- Form -->
             <form
                 class="flex flex-col gap-y-4 w-full"
             >
-                <h1 class="text-3xl text-at-light-orange self-center">Save Session</h1>
+                <h1 class="text-3xl text-light-grey self-center">Save Session</h1>
 
                 <!-- Date -->
                 <div class="flex flex-col">
-                <label for="date" class="text-sm text-at-light-orange">
+                <label for="date" class="text-sm text-light-grey">
                     Date
                 </label>
                 <input
                     type="date"
-                    class="p-2 text-grey-500 focus:outline-none"
+                    class="p-2 text-gray-100 focus:outline-transparent bg-med-grey rounded-sm"
                     id="date"
                     v-model="date"
                 />
@@ -36,12 +36,12 @@
 
                 <!-- Teacher -->
                 <div class="flex flex-col">
-                <label for="teacher" class="text-sm text-at-light-orange">
+                <label for="teacher" class="text-sm text-light-grey">
                     Teacher
                 </label>
                 <select
                     required
-                    class="p-2 text-grey-500 focus:outline-none"
+                    class="p-2 text-gray-100 focus:outline-transparent bg-med-grey rounded-sm"
                     id="teacher"
                     v-model="teacher"
                 >
@@ -51,18 +51,18 @@
 
                 <!-- Topic -->
                 <div class="flex flex-col">
-                <label for="topic" class="text-sm text-at-light-orange">
+                <label for="topic" class="text-sm text-light-grey">
                     Topic
                 </label>
                 <select
-                    class="p-2 text-grey-500 focus:outline-none"
+                    class="p-2 text-gray-100 focus:outline-transparent bg-med-grey rounded-sm"
                     id="topic"
                     v-model="topic"
                 >
                     <option :value="backControl">Back Control</option>
                     <option :value="halfGuard">Half Guard</option>
-                    <option :value="sideControl">Side Control</option>
                     <option :value="closedGuard">Closed Guard</option>
+                    <option :value="sideControl">Side Control</option>
                     <option :value="mount">Mount</option>
                     <option :value="deLaRiva">De La Riva</option>
                     <option :value="openGuard">Open Guard</option>
@@ -73,15 +73,15 @@
         </div>
 
         <!-- STUDENT LIST SORTED BY LATEST CLASS ATTENDED (NEWEST) -->
-        <div class="p-5 bg-light-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
-          <div class="rounded-md bg-at-light-orange mb-2 self-center">
-            <span class="flex text-m text-white px-24">ATTENDANCE - {{humanIdList.length -1}}</span>
+        <div class="p-5 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
+          <div class="mb-2 self-center">
+            <span class="text-2xl flex text-m text-light-grey px-24">Attendance - {{humanIdList.length -1}}</span>
           </div>
             <form
                 @submit.prevent="sessionToAPI"
                 class="flex flex-col gap-y-2 w-full"
             >
-                <div class="flex flex-col items-center justify-center">
+                <div class="flex flex-col items-center justify-center text-light-grey">
                   <MultiCheckbox
                     v-model:value="humanIdList"
                     :options="attendanceList"
@@ -93,14 +93,14 @@
         </div>
 
         <!-- LATEST SESSION SAVED -->
-        <div class="p-5 bg-light-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
-          <div class="rounded-md bg-at-light-orange mb-2 self-center">
-            <span class="flex text-m text-white px-24">Latest Session Saved</span>
+        <div class="p-5 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
+          <div class="mb-2 self-center">
+            <span class="text-2xl flex text-m text-light-grey px-24">Latest Session Saved</span>
           </div>
             <div class="flex pl-4 px-6 justify-center">
                   <ul class="list-inside space-y-1 justify-center list-disc">
-                    <li class="text-l text-dark-grey uppercase -mb-1">Date: {{ latestSessionSavedDate }}</li>
-                    <li class="text-l text-dark-grey uppercase">Topic: {{ latestSessionSavedTopic }}</li>
+                    <li class="text-l text-light-grey uppercase -mb-1">Date: {{ latestSessionSavedDate }}</li>
+                    <li class="text-l text-light-grey uppercase">Topic: {{ latestSessionSavedTopic }}</li>
                   </ul>
             </div>
         </div>
@@ -109,15 +109,15 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
-import { getAllHumans } from '../../services/humanService'
-import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService'
-import { saveSession, getAllSessions } from '../../services/sessionService'
-import humanStore from "../../store/humanStore"
 import moment from 'moment'
+import { onMounted, reactive, ref } from 'vue'
+import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService'
+import { getAllHumans } from '../../services/humanService'
+import { getAllSessions, saveSession } from '../../services/sessionService'
+import humanStore from "../../store/humanStore"
 
 // components import
-import Button from "../../components/Button.vue";
+import Button from "../../components/Button.vue"
 import MultiCheckbox from "../../components/Multi-checkbox.vue"
 
 export default {
