@@ -9,7 +9,7 @@
         <i v-if="isStudent" class="self-center text-5xl not-italic">🥋</i>
         <i v-if="isAdmin" class="self-center text-5xl not-italic">🔧</i>
         <h2 class="self-center  text-xl text-light-grey">{{ humanFullName }}</h2>
-        <h2 v-if="isAdmin" class="self-center text-xl text-at-faint-orange">ADMIN</h2>
+        <h2 v-if="isAdmin" class="self-center text-xl text-gold">ADMIN</h2>
       </div>
 
     <div class="pl-7 px-10 w-full mt-18 space-y-3">
