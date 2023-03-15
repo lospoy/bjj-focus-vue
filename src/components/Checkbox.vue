@@ -8,13 +8,13 @@
   />
   <label
     :for="fieldId"
-    class="flex flex-row items-center font-bold text-gray-800 cursor-pointer select-none"
+    class="flex flex-row items-center font-bold text-light-grey cursor-pointer select-none"
   >
     <i
       class="fa mr-2"
       :class="{
-        'fa-check-square text-at-light-orange rounded': checked,
-        'fa-square text-dark-grey rounded': !checked,
+        'fa-check-square text-at-faint-orange rounded': checked,
+        'fa-square text-light-grey rounded': !checked,
       }"
     ></i>
     {{ label }}
