@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://bjjfocus.com">
-    <img src="https://u.cubeupload.com/aa9988vvb/eeacover.png" width="70%">
+    <img src="https://u.cubeupload.com/aa9988vvb/337cover.png" width="70%">
   </a>
 </div>
 <br>
