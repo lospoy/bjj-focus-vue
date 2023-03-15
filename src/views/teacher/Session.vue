@@ -75,7 +75,7 @@
         <!-- STUDENT LIST SORTED BY LATEST CLASS ATTENDED (NEWEST) -->
         <div class="p-5 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
           <div class="mb-2 self-center">
-            <span class="text-2xl flex text-m text-light-grey px-24">Attendance - {{humanIdList.length -1}}</span>
+            <span class="text-2xl flex text-m text-light-grey">Attendance - {{humanIdList.length -1}}</span>
           </div>
             <form
                 @submit.prevent="sessionToAPI"
@@ -95,12 +95,12 @@
         <!-- LATEST SESSION SAVED -->
         <div class="p-5 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
           <div class="mb-2 self-center">
-            <span class="text-2xl flex text-m text-light-grey px-24">Latest Session Saved</span>
+            <span class="text-2xl flex text-m text-light-grey">Latest Session</span>
           </div>
             <div class="flex pl-4 px-6 justify-center">
-                  <ul class="list-inside space-y-1 justify-center list-disc">
-                    <li class="text-l text-light-grey uppercase -mb-1">Date: {{ latestSessionSavedDate }}</li>
-                    <li class="text-l text-light-grey uppercase">Topic: {{ latestSessionSavedTopic }}</li>
+                  <ul class="list-inside space-y-1 justify-center">
+                    <li class="text-l text-light-grey -mb-1">📅 {{ latestSessionSavedDate }}</li>
+                    <li class="text-l text-light-grey">📝 {{ latestSessionSavedTopic }}</li>
                   </ul>
             </div>
         </div>
