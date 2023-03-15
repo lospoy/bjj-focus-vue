@@ -18,7 +18,7 @@
       <div class="flex flex-col mt-2 w-full">
         <ul class="space-y-1 self-center">
             <li class="text-med-grey2 text-xs font-normal">
-              This is a closed beta - some things might be slow (or broken). Please share your feedback! Thanks and see you in class.
+              Please share your feedback!
             </li>
         </ul>
       </div>
