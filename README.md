@@ -16,13 +16,13 @@
   <img alt="JavaScript" src="https://img.shields.io/badge/-JavaScript-c4af0e?style=for-the-badge&logo=javascript&logoColor=white" />
   <img alt="Vite" src="https://img.shields.io/badge/-vite-b23efa?style=for-the-badge&logo=vite&logoColor=white" />
 </p>
-<p align="center">
-⚒️CURRENTLY MIGRATING FROM VUE-CLI TO VITE⚒️
-</p>
-<br>
+
+<div align="center">
+✅ Live and active! -> www.bjjfocus.com
+</div>
 
 
-
+# 
 Learning progress app for combat sports students and instructors
 
 - Component-structured SPA with Vue 3, Composition API, and Pinia
@@ -30,11 +30,11 @@ Learning progress app for combat sports students and instructors
 - RESTful API, JWT token authentication
 - Tailwind, Vuetify and custom UI components
 
-
-✅ Live and active! -> www.bjjfocus.com
-
-
+# 
 To run locally first install:
+<br>
 `` npm i ``
+<br>
 Then start both the backend and frontend:
+<br>
 `` npm run dev ``
