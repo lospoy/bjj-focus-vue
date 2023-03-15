@@ -6,8 +6,8 @@
     </div>
 
     <!-- STUDENT CHECKBOXES -->
-    <div class="p-8 flex flex-col items-center bg-slate-400 rounded-md shadow-lg mb-4">
-      <h1 class="text-3xl text-at-light-orange self-center">STUDENTS STATS</h1>
+    <div class="p-8 flex flex-col items-center bg-dark-grey  rounded-md shadow-lg mb-4">
+      <h1 class="text-3xl text-light-grey self-center">STUDENTS STATS</h1>
       <div class="flex flex-col items-center justify-center mt-4">
         <MultiCheckbox
           v-model:value="humanList"
