@@ -17,7 +17,7 @@
   </v-bottom-navigation>
 
   <!-- ADMIN NAV -->
-  <v-bottom-navigation density="compact" v-if="isAdmin" class="bg-at-orange text-light-grey">
+  <v-bottom-navigation density="compact" v-if="isAdmin" class="bg-gold text-dark-grey">
     <v-btn value="overview" :to="{ name: 'Overview' }">
       <v-icon>mdi-home</v-icon>
     </v-btn>
