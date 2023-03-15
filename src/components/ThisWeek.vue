@@ -3,8 +3,8 @@
   <div class="flex flex-col px-4">
 
     <!-- TOPIC -->
-    <h2 class="text-sm -mb-2 mt-2 text-med-grey2">This week's topic is</h2>
-    <h1 class="text-4xl text-white uppercase">{{ currentTopic }}</h1>
+    <h2 class="text-sm mt-2 text-med-grey2">This week's topic is</h2>
+    <h1 class="text-4xl text-white uppercase leading-8">{{ currentTopic }}</h1>
 
     <!-- SKILLS PERCENTAGES -->
     <div class="flex flex-col w-full" v-if="isTeacher">
