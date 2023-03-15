@@ -74,7 +74,7 @@ export default {
     // Button success visual feedback
     function buttonSuccess() {
         buttonTitle.value = "Logging in..."
-        buttonColor.value = "orange"
+        buttonColor.value = "gold"
     }
 
     // Get human name and ID and set to Store @../../store/user
