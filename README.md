@@ -60,5 +60,5 @@ Then start both the backend and frontend:
 ## Credits
 - Credit to [AryanJ](https://github.com/AryanJ-NYC) for the swift technical help and advice.
 - Thanks to [Salvador G](https://www.linkedin.com/in/salvador-gonz%C3%A1lez-garc%C3%ADa-548268175/) for his support, design patterns expertise, and concise UML diagrams.
-- Thanks to [Ju L](https://www.linkedin.com/in/julliardlin) for data hierarchy and functionality advice, and project management.
+- Thanks to [Julliard Lin](https://www.linkedin.com/in/julliardlin) for data hierarchy and functionality advice, and project management.
 
