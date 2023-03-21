@@ -52,9 +52,9 @@ export default {
         {"Back Control": "63476ca77c0c4048382acb04"},
         {"Half Guard": "634ed31717260c95e351de8d"},
         {"Closed Guard": "634ed77517260c95e351dfa3"},
+        {"De la Riva": "634edb2337829d81a79048ab"},
         {"Side Control": "634ed53c17260c95e351decb"},
         {"Mount": "634ecefa9f04894fb818c868"},
-        {"De la Riva": "634edb2337829d81a79048ab"},
         {"Open Guard": "638eaab8964f267814d40a89"},
         {"Turtle": "638ead84964f267814d40ad7"},
     ]
