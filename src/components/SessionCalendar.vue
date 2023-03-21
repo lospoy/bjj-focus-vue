@@ -6,7 +6,7 @@
       <v-calendar
         class="animate-pulse"
         is-expanded
-        v-if="skeleton"
+        v-show="skeleton"
         style="background-color: #4b5153; border: 0;"
       />
       <!-- Actual calendar with data -->
@@ -16,7 +16,7 @@
         color="yellow"
         :attributes="attributes"
         @dayclick = 'daySelected'
-        v-if="calendar"
+        v-show="calendar"
         class="calendar-style"
       >
 
@@ -81,8 +81,6 @@ export default {
 
     // Training data
     const studentTrainingData = ref(null)
-    const unattendedSessions = ref(null)
-    const attendedSessions = ref(null)
     const techniqueList = reactive([])
     const attendedOrNot = ref(null)
     const attended = ref(null)
@@ -117,64 +115,110 @@ export default {
     skeletonService()
 
     // **************  CALENDAR ************** 
+    // Variables
     const date = ref(null)
     const attributes = ref(null)
+    const sessions = useSessionsStore().sessions
+    const unattendedSessions = sessions.unattended
+    const attendedSessions = sessions.attended
 
-    setTimeout(() => {
-      const sessions = useSessionsStore().sessions
-      unattendedSessions.value = sessions.unattended
-      attendedSessions.value = sessions.attended
+    // To improve speed, we're initially fetching only dates the user can see (current month), then the rest.
+    // We could create a function that filters sessions held on the current month.
+    // But since there's at most 8 sessions in one month, let's simply fetch the last 8 (attended and otherwise) sessions, then the rest.
 
-      // studentTrainingData.value = store.methods.getStudent().training
-      // unattendedSessions.value = studentTrainingData.value.unattendedSessions
-      // attendedSessions.value = studentTrainingData.value.attendedSessions
+    // Cleaner code would involve a looping function that fetches say last 8 sessions,
+    // displays them, then fetches the next 8 sessions and displays them, etc. Until it reaches the first ever session.
+    // Then, since past sessions should not change, they could be stored locally and only fetch/update the sessions that happened
+    // since last session stored locally.
+    const lastEightAttendedSessions = attendedSessions.slice(0).slice(-8)
+    const lastEightUnattendedSessions = unattendedSessions.slice(0).slice(-8)
 
-      // Returns array of promises (attended sessions)
-      const attendedPromise = attendedSessions.value.map(async aS => ({
-        highlight: {
-          style: {
-            backgroundColor: '#ffcc41',
-            borderColor: '#ffcc41',
-          },
-          fillMode: 'outline',
+    // Returns array of promises (attended sessions)
+    const lastEightAttendedPromise = lastEightAttendedSessions.map(async aS => ({
+      highlight: {
+        style: {
+          backgroundColor: '#ffcc41',
+          borderColor: '#ffcc41',
         },
-        popover: {
-          label: `${await getTopic(aS.what.focus._id)}`,
+        fillMode: 'outline',
+      },
+      popover: {
+        label: `${await getTopic(aS.what.focus._id)}`,
+      },
+      dates: aS.when.date
+    }))
+
+    // Returns array of promises (unattended sessions)
+    const lastEightUnattendedPromise = lastEightUnattendedSessions.map(async uS => ({
+      highlight: {
+        style: {
+          backgroundColor: 'rgba(247, 247, 247, .3)',
+          borderColor: 'rgba(247, 247, 247, 0)'
         },
-        dates: aS.when.date
-      }))
+        fillMode: 'outline'
+      },
+      popover: {
+        label: `${await getTopic(uS.what.focus._id)}`,
+      },
+      dates: uS.when.date
+    }))
 
-      // Returns array of promises (unattended sessions)
-      const unattendedPromise = unattendedSessions.value.map(async uS => ({
-        highlight: {
-          style: {
-            backgroundColor: 'rgba(247, 247, 247, .3)',
-            borderColor: 'rgba(247, 247, 247, 0)'
-          },
-          fillMode: 'outline'
+    // Returns resolved array of promises
+    const resolveFirst = async(arr1, arr2) => {
+      const res1 = await Promise.all(arr1)
+      const res2 = await Promise.all(arr2)
+      attributes.value = res1.concat(res2).concat(todayMarker)
+    }
+    resolveFirst(lastEightAttendedPromise, lastEightUnattendedPromise)
+    const attributesValueCache = attributes.value
+    
+    // Returns array of promises (attended sessions)
+    const attendedPromise = attendedSessions.map(async aS => ({
+      highlight: {
+        style: {
+          backgroundColor: '#ffcc41',
+          borderColor: '#ffcc41',
         },
-        popover: {
-          label: `${await getTopic(uS.what.focus._id)}`,
+        fillMode: 'outline',
+      },
+      popover: {
+        label: `${await getTopic(aS.what.focus._id)}`,
+      },
+      dates: aS.when.date
+    }))
+
+    // Returns array of promises (unattended sessions)
+    const unattendedPromise = unattendedSessions.map(async uS => ({
+      highlight: {
+        style: {
+          backgroundColor: 'rgba(247, 247, 247, .3)',
+          borderColor: 'rgba(247, 247, 247, 0)'
         },
-        dates: uS.when.date
-      }))
+        fillMode: 'outline'
+      },
+      popover: {
+        label: `${await getTopic(uS.what.focus._id)}`,
+      },
+      dates: uS.when.date
+    }))
 
-      const todayMarker = [{ // Style for a marker that marks today's date
-          key: 'today',
-          dot: 'yellow',
-          dates: new Date(),
-        }]
+    // Style for a marker that marks today's date
+    const todayMarker = [{
+        key: 'today',
+        dot: 'yellow',
+        dates: new Date(),
+      }]
 
-      // Returns resolved array of promises
-      const resolvePromiseArrays = async(arr1, arr2) => {
-        const res1 = await Promise.all(arr1)
-        const res2 = await Promise.all(arr2)
-        attributes.value = res1.concat(res2).concat(todayMarker)
-      }
-      resolvePromiseArrays(attendedPromise, unattendedPromise)
-    }, delay);
+    // Returns resolved array of promises
+    const resolveTheRest = async(arr1, arr2) => {
+      const res1 = await Promise.all(arr1)
+      const res2 = await Promise.all(arr2)
+      attributes.value = res1.concat(res2).concat(attributesValueCache)
+    }
+    resolveTheRest(attendedPromise, unattendedPromise)
 
 
+    // CLICKED SESSION DETAILS
     // DISPLAYS A DIV WITH SESSION DATA IF THE CLICKED DATE IS A FOCUS SESSION DATE
     const daySelected = day => {
       selectedDay.value = day.date.toISOString().slice(0, 10) // YYYY-MM-DD
@@ -284,7 +328,7 @@ export default {
         daySelected, selectedDay,
         displaySessionCard, sessionCardDate, noSessionCard,
         // Training data
-        studentTrainingData, attendedSessions, unattendedSessions, techniqueList, selectedLesson, attendedOrNot, sessionTopic, attended
+        studentTrainingData, techniqueList, selectedLesson, attendedOrNot, sessionTopic, attended
     };
   },
 };
