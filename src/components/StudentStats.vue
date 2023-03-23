@@ -1,6 +1,7 @@
 <template>
     <!-- MY STATS -->
     <div class="p-5 bg-dark-grey flex flex-col justify-center">
+      <h3 class="text-2xl text-light-grey">{{ title }}</h3>
       <div class="pl-2 px-2 animate-pulse" v-if="skeleton">
             <ul class="list-inside justify-center">
                 <li class="text-sm text-light-grey font-normal">You've attended {{ focusSessions }} Focus sessions.</li>
@@ -17,6 +18,7 @@
                 <li class="text-sm text-light-grey font-normal">You've been Focus training for {{ totalTrained }}</li>
             </ul>
       </div>
+
     </div>
 </template>
 
@@ -27,6 +29,10 @@ import { useSessionsStore } from "../store/sessions";
 export default {
 name: "StudentStats",
 props: {
+  title: {
+      type: String,
+      required: false,
+    },
   id: {
     type: String,
     required: false,
