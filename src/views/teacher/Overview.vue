@@ -11,17 +11,19 @@
     </div>
 
     <!-- Components (cards) -->
-    <ThisWeek />
-    <TopicsChart :id='humanID' />
-    <SkillsChart :id='humanID' />
-    <SessionCalendar />
-    <StudentStats :id='humanID' />
+    
+      <ThisWeek />
+      <TopicsChart :id='humanID' />
+      <SkillsChart :id='humanID' />
+      <SessionCalendar />
+      <StudentStats :id='humanID' />
+    
 
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import SessionCalendar from "../../components/SessionCalendar.vue";
 import SkillsChart from '../../components/SkillsChart.vue';
 import StudentStats from "../../components/StudentStats.vue";
@@ -44,13 +46,14 @@ export default {
     const errorMsg = ref(null);
     const humanName = ref(null)
     const userStore = useUserStore()
-
-    // Set user data in Pinia
     const humanID = userStore.human.id
-    useSessionsStore().getAndSetSessionsData(humanID)
 
-    // Set name on DOM
-    humanName.value = userStore.human.name.first
+    onMounted(() => {
+      // Set user data in Pinia
+      useSessionsStore().getAndSetSessionsData(humanID)
+      // Set name on DOM
+      humanName.value = userStore.human.name.first
+    })
     
     return {
         errorMsg,
