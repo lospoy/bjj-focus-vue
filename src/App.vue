@@ -4,7 +4,7 @@
     <Navigation />
     <BottomNav v-if="userIsLoggedIn" />
     <div>
-      <router-view />
+      <router-view class="pb-10" />
     </div>
   </div>
   </v-app>
