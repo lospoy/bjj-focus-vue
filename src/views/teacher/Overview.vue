@@ -11,17 +11,19 @@
     </div>
 
     <!-- Components (cards) -->
-    <ThisWeek />
-    <TopicsChart :id='humanID' />
-    <SkillsChart :id='humanID' />
-    <SessionCalendar />
-    <StudentStats :id='humanID' />
+    
+      <ThisWeek />
+      <TopicsChart :id='humanID' />
+      <SkillsChart :id='humanID' />
+      <SessionCalendar v-if="sessionData" />
+      <StudentStats :id='humanID' />
+    
 
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import SessionCalendar from "../../components/SessionCalendar.vue";
 import SkillsChart from '../../components/SkillsChart.vue';
 import StudentStats from "../../components/StudentStats.vue";
@@ -44,17 +46,25 @@ export default {
     const errorMsg = ref(null);
     const humanName = ref(null)
     const userStore = useUserStore()
-
-    // Set user data in Pinia
     const humanID = userStore.human.id
-    useSessionsStore().getAndSetSessionsData(humanID)
+    const sessionData = ref(null)
 
-    // Set name on DOM
-    humanName.value = userStore.human.name.first
+    watch(() => useSessionsStore().sessions.weeksTrained, sessionDataLoaded => {
+      sessionData.value = sessionDataLoaded;
+    });
+
+    onMounted(() => {
+      // Set user data in Pinia
+      useSessionsStore().getAndSetSessionsData(humanID)
+      // Set name on DOM
+      humanName.value = userStore.human.name.first
+      if (useSessionsStore().sessions.weeksTrained !== "") sessionData.value = true
+    })
     
     return {
         errorMsg,
-        humanName, humanID
+        humanName, humanID,
+        sessionData
     };
   },
 };

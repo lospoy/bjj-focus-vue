@@ -32,11 +32,10 @@
 
 <script>
 import { onMounted, ref } from "vue";
-import { getAllHumans } from "../../services/humanService";
-import humanStore from "../../store/humanStore";
-// components import
 import MultiCheckbox from "../../components/Multi-checkbox.vue";
 import StudentStats from "../../components/StudentStats.vue";
+import { getAllHumans } from "../../services/humanService";
+import humanStore from "../../store/humanStore";
 
 export default {
   name: "StudentList",
