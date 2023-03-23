@@ -15,7 +15,7 @@
       <ThisWeek />
       <TopicsChart :id='humanID' />
       <SkillsChart :id='humanID' />
-      <SessionCalendar />
+      <SessionCalendar v-if="sessionData" />
       <StudentStats :id='humanID' />
     
 
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import SessionCalendar from "../../components/SessionCalendar.vue";
 import SkillsChart from '../../components/SkillsChart.vue';
 import StudentStats from "../../components/StudentStats.vue";
@@ -47,17 +47,24 @@ export default {
     const humanName = ref(null)
     const userStore = useUserStore()
     const humanID = userStore.human.id
+    const sessionData = ref(null)
+
+    watch(() => useSessionsStore().sessions.weeksTrained, sessionDataLoaded => {
+      sessionData.value = sessionDataLoaded;
+    });
 
     onMounted(() => {
       // Set user data in Pinia
       useSessionsStore().getAndSetSessionsData(humanID)
       // Set name on DOM
       humanName.value = userStore.human.name.first
+      if (useSessionsStore().sessions.weeksTrained !== "") sessionData.value = true
     })
     
     return {
         errorMsg,
-        humanName, humanID
+        humanName, humanID,
+        sessionData
     };
   },
 };
