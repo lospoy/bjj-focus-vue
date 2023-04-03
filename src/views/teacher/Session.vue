@@ -66,7 +66,12 @@
     </div>
 
     <!-- ATTENDANCE -->
-    <div class="p-2 pb-6 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4 -mr-16">
+    <div class="p-4 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
+      <Switcher
+          class="flex justify-center max-w-screen-sm py-1 px-2 mb-4"
+          :titleLeft="'Active'"
+          :titleRight="'Inactive'"
+        />
       <div class="mb-2 self-center">
         <span class="text-2xl flex text-m text-light-grey">Attendance - {{humanIdList.length -1}}</span>
       </div>
@@ -74,23 +79,21 @@
         @submit.prevent="sessionToAPI"
         class="flex flex-col gap-y-2 w-full items-center"
       >
-        
-        <div class="flex flex-row gap-x-4">
+
           <!-- LEFT NAME LIST -->
-          <div class="items-center text-light-grey text-md">
+          <div :key="cardRerenderKey" v-if="activeCard" class="items-center text-light-grey text-md">
             <MultiCheckbox
               v-model:value="humanIdList"
               :options="activeAttendanceList"
             />
           </div>
           <!-- RIGHT NAME LIST -->
-          <div class="items-center text-light-grey text-md">
+          <div :key="cardRerenderKey" v-if="inactiveCard" class="items-center text-light-grey text-md">
             <MultiCheckbox
               v-model:value="humanIdList"
               :options="inactiveAttendanceList"
             />
           </div>
-        </div>
         
         <Button :title='buttonTitle' :color='buttonColor' />
       </form>
@@ -113,7 +116,8 @@
 
 <script>
 import moment from 'moment'
-import { onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, reactive, ref } from 'vue'
+import Switcher from '../../components/Switcher.vue'
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService'
 import { getAllSessions, saveSession } from '../../services/sessionService'
 import { useHumanStore } from "../../store/humans"
@@ -129,6 +133,7 @@ name: 'session',
 components: {
   Button,
   MultiCheckbox,
+  Switcher
 },
 setup() {
   const statusMsg = ref(null)
@@ -152,6 +157,7 @@ setup() {
   const teacher = ref(null)
   const carlosCampoyID = '630e5c2da1c2a0bcf246c383'
   teacher.value = carlosCampoyID
+  const carlosIdObject = {"id": "630e5c2da1c2a0bcf246c383"}
 
   // TOPIC
   // This week's topic is being set by loading the ThisWeek component
@@ -160,17 +166,30 @@ setup() {
   const thisWeeksTopicID = trainingStore.topics.thisWeek.ID
   topic.value = thisWeeksTopicID
 
-  // Create data
+  // ATTENDANCE RELATED
   const latestSessionSavedDate = ref(null)
   const latestSessionSavedTopic = ref(null)
   const student = ref(null)
   const date = ref(null)
   const techniqueList = reactive([]) // Initialize empty array to show session techniques in DOM
   const techniqueIdArray = reactive([]) // Initialize empty array to store technique ids for POST
-  const carlosId = {"id": "630e5c2da1c2a0bcf246c383"}
-  const humanIdList = ref([carlosId]) // used in multicheckbox, defautl has Carlos Campoy as curriculum ideal
-  const activeAttendanceList = ref([]) // used in multicheckbox
-  const inactiveAttendanceList = ref([]) // used in multicheckbox
+  const humanIdList = ref([carlosIdObject])     // used in multicheckbox, defautl has Carlos Campoy as curriculum ideal
+  const activeAttendanceList = ref([])    // used in multicheckbox
+  const inactiveAttendanceList = ref([])  // used in multicheckbox
+
+  // SWITCHER
+  const activeCard = ref(true)  // used by switcher
+  const inactiveCard = ref(null)  // used by switcher
+  const emitter = inject('emitter')
+  const cardRerenderKey = ref(0) // works alongside the listener/emitter
+  emitter.on('switcherLeft', (value) => {
+      activeCard.value = true
+      inactiveCard.value = false
+  })
+  emitter.on('switcherRight', (value) => {
+      activeCard.value = false
+      inactiveCard.value = true
+  })
 
   // LAST SESSION SAVED CARD
   async function displayLatestSessionSaved() {
@@ -322,6 +341,8 @@ setup() {
     latestSessionSavedDate, latestSessionSavedTopic,
     // STUDENT LIST & MULTICHECKBOX
     activeAttendanceList, inactiveAttendanceList, humanIdList,
+    // Switcher
+    inactiveCard, activeCard, cardRerenderKey
   }
 },
 }
