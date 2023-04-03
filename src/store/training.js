@@ -9,7 +9,8 @@ export const useTrainingStore = defineStore('training', () => {
   })
 
   const topics = ref({
-    attended: []
+    attended: [],
+    thisWeek: {}
   })
 
   function setDates(payload) {
@@ -21,10 +22,20 @@ export const useTrainingStore = defineStore('training', () => {
   }
 
   function setTopics(payload) {
-    if(!payload) { return topics.value = null }
+    if(!payload) { return topics.value.attended = null }
 
     topics.value.attended = payload
   }
+
+  function setThisWeeksTopic(payload) {
+    if(!payload) { return topics.value.thisWeek = null }
+
+    console.log(payload)
+    topics.value.thisWeek = {
+      name: Object.keys(payload)[0],
+      ID: Object.values(payload)[0],
+    }
+  }  
 
   function $reset() {
     dates.value = {
@@ -33,13 +44,14 @@ export const useTrainingStore = defineStore('training', () => {
       unattended: []
     }
     topics.value = {
-      attended: []
+      attended: [],
+      thisWeek: {}
     }
   }
 
   return {
     dates, setDates,
-    topics, setTopics,
+    topics, setTopics, setThisWeeksTopic,
     $reset
   }
 }, {

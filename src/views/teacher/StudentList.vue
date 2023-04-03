@@ -24,7 +24,6 @@
           :key="human"
           :title='human.name'
           :id='human.id'
-          class="mb-4"
         />
   
   </div>
