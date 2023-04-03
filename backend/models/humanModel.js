@@ -33,22 +33,14 @@ const humanSchema = mongoose.Schema(
         },
         trainingStatus: {
             type: Object,
-            required: [false, 'Current training status required.'],
+            required: [true, 'Current training status required.'],
             properties: {
                 active: {
                     type: Boolean,
                     required: false,
-                    default: true,
+                    default: true
                 },
                 injured: {
-                    type: Boolean,
-                    required: false,
-                },
-                resting: {
-                    type: Boolean,
-                    required: false,
-                },
-                unknown: {
                     type: Boolean,
                     required: false,
                 },
