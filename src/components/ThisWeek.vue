@@ -24,12 +24,14 @@
 <script>
 import { onMounted, reactive, ref } from "vue";
 import { getAllFocusLessons } from "../services/bjj_services/focusLessonService";
+import { useTrainingStore } from "../store/training";
 import { useUserStore } from "../store/user";
 
 export default {
   name: "ThisWeek",
   setup() {
     const userStore = useUserStore()
+    const trainingStore = useTrainingStore()
     const currentTopic = ref(null);
     const nextTopic = ref(null)
     const skillsList = reactive([])
@@ -48,14 +50,15 @@ export default {
 
     // **************  CURRENT & NEXT TOPIC **************
     // One topic per week
+    // Displayed in this order
     const weeklyTopicList = [
         {"Back Control": "63476ca77c0c4048382acb04"},
         {"Half Guard": "634ed31717260c95e351de8d"},
         {"Closed Guard": "634ed77517260c95e351dfa3"},
         {"De la Riva": "634edb2337829d81a79048ab"},
+        {"Open Guard": "638eaab8964f267814d40a89"},
         {"Side Control": "634ed53c17260c95e351decb"},
         {"Mount": "634ecefa9f04894fb818c868"},
-        {"Open Guard": "638eaab8964f267814d40a89"},
         {"Turtle": "638ead84964f267814d40ad7"},
     ]
 
@@ -87,6 +90,12 @@ export default {
     // Assigning values to variables
     currentTopic.value = currentTopicName
     nextTopic.value = nextTopicName
+
+    // Setting thisWeek topic to training store
+    setTimeout(() => {
+      trainingStore.setThisWeeksTopic(currentTopicObject)
+    }, 1000);
+    
 
 
     // **************  SKILLS PERCENTAGES **************
