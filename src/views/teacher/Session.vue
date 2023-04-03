@@ -66,7 +66,7 @@
     </div>
 
     <!-- ATTENDANCE -->
-    <div class="p-5 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
+    <div class="p-2 pb-6 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4 -mr-16">
       <div class="mb-2 self-center">
         <span class="text-2xl flex text-m text-light-grey">Attendance - {{humanIdList.length -1}}</span>
       </div>
@@ -75,16 +75,16 @@
         class="flex flex-col gap-y-2 w-full items-center"
       >
         
-        <div class="flex flex-row gap-x-20">
+        <div class="flex flex-row gap-x-4">
           <!-- LEFT NAME LIST -->
-          <div class="items-center justify-center text-light-grey">
+          <div class="items-center text-light-grey text-md">
             <MultiCheckbox
               v-model:value="humanIdList"
               :options="activeAttendanceList"
             />
           </div>
           <!-- RIGHT NAME LIST -->
-          <div class="items-center justify-center text-light-grey">
+          <div class="items-center text-light-grey text-md">
             <MultiCheckbox
               v-model:value="humanIdList"
               :options="inactiveAttendanceList"
