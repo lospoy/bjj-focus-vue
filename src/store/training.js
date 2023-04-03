@@ -30,7 +30,6 @@ export const useTrainingStore = defineStore('training', () => {
   function setThisWeeksTopic(payload) {
     if(!payload) { return topics.value.thisWeek = null }
 
-    console.log(payload)
     topics.value.thisWeek = {
       name: Object.keys(payload)[0],
       ID: Object.values(payload)[0],
