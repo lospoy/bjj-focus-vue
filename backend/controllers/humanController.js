@@ -10,6 +10,7 @@ const registerHuman = asyncHandler(async (req, res) => {
     // trainingStatus active by default for new humans
     const { 
         name: { first, last },
+        trainingStatus: { active }
     } = req.body
 
     if (!first || !last) {
@@ -30,6 +31,9 @@ const registerHuman = asyncHandler(async (req, res) => {
         name: {
             first, last
         },
+        trainingStatus: {
+            active: true
+        },
         createdBy: req.user.id
     })
 
@@ -39,6 +43,9 @@ const registerHuman = asyncHandler(async (req, res) => {
             name: {
                 first: human.name.first,
                 last: human.name.last
+            },
+            trainingStatus: {
+                active: true
             },
             createdBy: req.user.id
         })
