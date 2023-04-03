@@ -29,6 +29,8 @@ import SkillsChart from '../../components/SkillsChart.vue';
 import StudentStats from "../../components/StudentStats.vue";
 import ThisWeek from '../../components/ThisWeek.vue';
 import TopicsChart from '../../components/TopicsChart.vue';
+import { getAllHumans } from '../../services/humanService';
+import { useHumanStore } from '../../store/humans';
 import { useSessionsStore } from '../../store/sessions';
 import { useUserStore } from '../../store/user';
 
@@ -53,9 +55,14 @@ export default {
       sessionData.value = sessionDataLoaded;
     });
 
-    onMounted(() => {
+    onMounted(async() => {
       // Set user data in Pinia
       useSessionsStore().getAndSetSessionsData(humanID)
+
+      // Set AllHumans in Pinia
+      const allHumans = await getAllHumans()
+      useHumanStore().setAllHumans(allHumans)
+      
       // Set name on DOM
       humanName.value = userStore.human.name.first
       if (useSessionsStore().sessions.weeksTrained !== "") sessionData.value = true
