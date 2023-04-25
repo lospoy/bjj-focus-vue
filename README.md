@@ -30,11 +30,12 @@
 BJJ Focus is an Edtech App for combat sports students and instructors, currently used by NYC's [Gentle Art Studio](https://www.gentleartstudio.com/). The BJJ Focus app helps teachers and students keep detailed track of attendance, technique creation, curriculum structure, and student progress.
 
 ## Tech Details
-- SPA with Vue3/Vite, Composition API, and Pinia
-- Object-based schemas, avoiding “primitive obsession”
-- RESTful API
-- JWT token authentication
-- Reusable components
+- Vue3/Vite, Composition API
+- State management and cached resources with Pinia (Vuex 5)
+- Tailwind, Vuetify, and custom reusable UI components
+- Object-oriented database model design with Mongoose (MongoDB)
+- Security with JWT authentication, redundant input validation, password hashing
+- 9 endpoint RESTful API and respective controllers/router
 
 ## Example Screens
 Student side
