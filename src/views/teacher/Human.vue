@@ -47,23 +47,21 @@
 
 <script>
 import { ref } from "vue";
-import { createHuman, getAllHumans } from "../../services/humanService";
-
-// components import
 import Button from "../../components/Button.vue";
+import { createHuman } from "../../services/humanService";
 
 export default {
-  name: "Human",
-  components: {
-    Button,
-  },
-  setup() {
-    // Variables
-    const errorMsg = ref(null);
-    const firstName = ref(null);
-    const lastName = ref(null);
-    let buttonColor = ref(null)
-    let buttonTitle = ref("Save Human")
+name: "Human",
+components: {
+  Button,
+},
+setup() {
+  // Variables
+  const errorMsg = ref(null);
+  const firstName = ref(null);
+  const lastName = ref(null);
+  let buttonColor = ref(null)
+  let buttonTitle = ref("Save Human")
 
     // Button success visual feedback
     const buttonSuccess = async () => {
@@ -79,39 +77,35 @@ export default {
         }, 2500);
     }
 
-    // New Human function
-    const newHuman = async () => {
-        const allHumans = await getAllHumans()
-        // Check if human already exists
-        const foundHuman = allHumans.filter(human =>
-            human.name.first.toLowerCase() === firstName.value.toLowerCase())[0]
-            && allHumans.filter(human =>
-            human.name.last.toLowerCase() === lastName.value.toLowerCase())[0];
+  // New Human function
+  async function newHuman() {
+      try {
+        
+        const res = await createHuman({
+          name: {
+              first: firstName.value,
+              last: lastName.value,
+          }
+        });
+        
+        if(res.status === 201) { // Success button visual feedback
+          await buttonSuccess()
+        }
 
-        if (!foundHuman) {
-            try {
-              const res = await createHuman({
-                name: {
-                    first: firstName.value,
-                    last: lastName.value,
-                },});
-                // Success button visual feedback
-                if(res.status === 201) { await buttonSuccess() }
-            } catch (error) {
-              errorMsg.value = error.message;
-                setTimeout(() => {
-                  errorMsg.value = null;
-                }, 5000);
-            }
-            return;
+      } catch (error) {
+        errorMsg.value = "Error: human with that exact name already exists in the database";
+        setTimeout(() => {
+          errorMsg.value = null;
+        }, 5000);
       }
-      errorMsg.value = "Error: human with that exact name already exists in the database";
-      setTimeout(() => {
-        errorMsg.value = null;
-      }, 5000);
-    };
-
-    return { firstName, lastName, errorMsg, newHuman, buttonColor, buttonTitle, buttonSuccess };
-  },
+      
+      return;
+  };
+  return {
+    errorMsg,
+    firstName, lastName, newHuman,
+    buttonTitle, buttonColor
+  }
+},
 };
 </script>
