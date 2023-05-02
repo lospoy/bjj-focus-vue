@@ -8,10 +8,7 @@ const Human = require('../models/humanModel')
 // @access  Public
 const registerHuman = asyncHandler(async (req, res) => {
     // trainingStatus active by default for new humans
-    const { 
-        name: { first, last },
-        trainingStatus: { active }
-    } = req.body
+    const { name: { first, last } } = req.body
 
     if (!first || !last) {
         res.status(400)
@@ -22,7 +19,7 @@ const registerHuman = asyncHandler(async (req, res) => {
     const humanExists = await Human.findOne({ name: { first, last } })
 
     if (humanExists) {
-        res.status(400)
+        res.status(409)
         throw new Error(`Human with name ${first} ${last} already exists`)
     }
 
