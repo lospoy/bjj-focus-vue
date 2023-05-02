@@ -61,14 +61,15 @@ export async function createHuman(data) {
         body: JSON.stringify(data),
       });
 
-    if (!response.ok) {
+    if (response.status === 409) {
+      throw new Error("Conflict, data already exists");
+    } else if (!response.ok) {
       throw new Error("error => response not ok");
     } else {
-      return await response;
+      return response
     }
   } catch (e) {
     console.log(e);
-
   }
 }
 
