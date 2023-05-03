@@ -38,12 +38,13 @@ export default {
     },
   },
   setup(props, context) {
-    const check = (optionId, checked) => {
+    const check = (option, checked) => {
       let updatedValue = [...props.value];
       if (checked) {
-        updatedValue.push(optionId);
+        updatedValue.push(option);
+        // console.log(option) to retrieve the selected option object
       } else {
-        updatedValue.splice(updatedValue.indexOf(optionId), 1);
+        updatedValue.splice(updatedValue.indexOf(option), 1);
       }
       context.emit("update:value", updatedValue);
     };
