@@ -120,8 +120,8 @@ import { inject, onMounted, reactive, ref } from 'vue'
 import Switcher from '../../components/Switcher.vue'
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService'
 import { getAllSessions, saveSession } from '../../services/sessionService'
-import { useHumanStore } from "../../store/humans"
 import humanStore from "../../store/humanStore"
+import { useHumanStore } from "../../store/humans"
 import { useTrainingStore } from "../../store/training"
 
 // components import
@@ -173,7 +173,7 @@ setup() {
   const date = ref(null)
   const techniqueList = reactive([]) // Initialize empty array to show session techniques in DOM
   const techniqueIdArray = reactive([]) // Initialize empty array to store technique ids for POST
-  const humanIdList = ref([carlosIdObject])     // used in multicheckbox, defautl has Carlos Campoy as curriculum ideal
+  const humanIdList = ref([carlosIdObject])     // used in multicheckbox, has Carlos Campoy as default value to keep track of classes (teacher always attends)
   const activeAttendanceList = ref([])    // used in multicheckbox
   const inactiveAttendanceList = ref([])  // used in multicheckbox
 
@@ -233,7 +233,7 @@ setup() {
     const activeHumans = allHumans.filter(human => human.trainingStatus)  // currently only "active" humnas have trainingStatus
     const activeHumansIDArray = activeHumans.map(human => human._id)
     const activeStudentsNameArray = await Promise.all(  // returns array of strings
-      activeHumansIDArray.map(id => { 
+      activeHumansIDArray.map(id => {
         return humanStore.methods.getStudentName(id)
       })
     )
@@ -245,7 +245,13 @@ setup() {
       }
     })
 
-    return activeStudentsnamesAndIDsArray
+    const sortedNamesAndIdsArray = activeStudentsnamesAndIDsArray.sort((a, b) => {
+      const firstNameA = a.name.split(" ")[0];
+      const firstNameB = b.name.split(" ")[0];
+      return firstNameA.localeCompare(firstNameB);
+    });
+    
+    return sortedNamesAndIdsArray
   }
 
   // INACTIVE *NOT ACTIVE* STUDENTS ATTENDANCE ARRAY
@@ -261,7 +267,7 @@ setup() {
     )
 
     const studentsLatestAttendedSessionArray = await Promise.all( // returns array of last session attended by each human (objects)
-      inactiveStudentsNameArray.map(id => { 
+      inactiveHumansIDArray.map(id => { 
         return humanStore.methods.getStudentLastAttendedSession(id)
       })
     )
@@ -275,7 +281,7 @@ setup() {
       }
     }
 
-    const namesIdsLastDateArray = inactiveStudentsNameArray.map((id, i) => { // creates array of objects
+    const namesIdsLastDateArray = inactiveHumansIDArray.map((id, i) => { // creates array of objects
       return {
         id: id,
          name: inactiveStudentsNameArray[i],
@@ -283,11 +289,12 @@ setup() {
       }
     })
 
-    const sortedNamesAndIdsArray = namesIdsLastDateArray.sort((a, b) => { // Sorts array by most recent date
-      const dateToMs = date => new Date(date).getTime()
-      return dateToMs(b.lastDate) - dateToMs(a.lastDate)
-    })
-      
+    const sortedNamesAndIdsArray = namesIdsLastDateArray.sort((a, b) => {
+      const firstNameA = a.name.split(" ")[0];
+      const firstNameB = b.name.split(" ")[0];
+      return firstNameA.localeCompare(firstNameB);
+    });
+    
     return sortedNamesAndIdsArray
   }
 
