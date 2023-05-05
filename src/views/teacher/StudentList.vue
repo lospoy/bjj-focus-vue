@@ -33,8 +33,8 @@
 import { onMounted, ref } from "vue";
 import MultiCheckbox from "../../components/Multi-checkbox.vue";
 import StudentStats from "../../components/StudentStats.vue";
-import { getAllHumans } from "../../services/humanService";
 import humanStore from "../../store/humanStore";
+import { useHumanStore } from "../../store/humans";
 
 export default {
   name: "StudentList",
@@ -42,46 +42,60 @@ export default {
     StudentStats,
     MultiCheckbox
   },
-  setup() {
-    // Variables
-    const errorMsg = ref(null);
-    const humanList = ref([]) // used in multicheckbox
-    const nameAndIdArray = ref([]) // used in multicheckbox
+setup() {
+  // Variables
+  const errorMsg = ref(null);
+  const humanList = ref([]) // used in multicheckbox
+  const nameAndIdArray = ref([]) // used in multicheckbox
+  
+  // Pinia Store
+  const allHumans = useHumanStore().allHumans
 
-    // CREATE HUMAN NAMES AND IDs ARRAY -> array of objects
-    // [ {name: "Juan", id: "1231228hfqinf"}, ] 
-    const createNameAndIdArray = async() => {
-      const allHumans = await getAllHumans()
-      const allHumansIdArray = allHumans.map(human => human._id)
-      const studentsNameArray = await Promise.all(  // returns array of strings
-        allHumansIdArray.map(id => { 
-          return humanStore.methods.getStudentName(id)
-        })
-      )
+  // ACTIVE STUDENTS ATTENDANCE ARRAY
+  // OUTPUT --> [ {id: "441d321e5b21ee1ce143945d", name: "Joe Schmoe"}, ] 
+  async function createActiveStudentsAttendanceArray() {
 
-      const nameAndIdArray = allHumansIdArray.map((id, i) => {
-        return {
-          id: id,
-          name: studentsNameArray[i]
-        }
+    const activeHumans = allHumans.filter(human => human.trainingStatus)  // currently only "active" humnas have trainingStatus
+    const activeHumansIDArray = activeHumans.map(human => human._id)
+    const activeStudentsNameArray = await Promise.all(  // returns array of strings
+      activeHumansIDArray.map(id => {
+        return humanStore.methods.getStudentName(id)
       })
-      return nameAndIdArray
-    }
-
-    // MULTI CHECKBOX
-    const getNameAndIdArray = async() => {
-      nameAndIdArray.value = await createNameAndIdArray()
-    }
-
-    onMounted(() => {
-      getNameAndIdArray()
+    )
+    
+    const activeStudentsnamesAndIDsArray = activeHumansIDArray.map((id, i) => { // creates array of objects
+      return {
+        id: id,
+        name: activeStudentsNameArray[i],
+      }
     })
 
-    return {
-        errorMsg,
-        // MULTICHECKBOX
-        humanList, nameAndIdArray
-    };
-  },
+    // Displays ID under student's name
+
+
+    const sortedNamesAndIdsArray = activeStudentsnamesAndIDsArray.sort((a, b) => {
+      const firstNameA = a.name.split(" ")[0];
+      const firstNameB = b.name.split(" ")[0];
+      return firstNameA.localeCompare(firstNameB);
+    });
+
+    return sortedNamesAndIdsArray
+  }
+
+  // MULTI CHECKBOX
+  const getNameAndIdArray = async() => {
+    nameAndIdArray.value = await createActiveStudentsAttendanceArray()
+  }
+
+  onMounted(() => {
+    getNameAndIdArray()
+  })
+  
+  return {
+      errorMsg,
+      // MULTICHECKBOX
+      humanList, nameAndIdArray
+  };
+},
 };
 </script>
