@@ -73,4 +73,26 @@ export async function createHuman(data) {
   }
 }
 
+export async function updateHuman(id, data) {
+  let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
+
+  try {
+    const response = await fetch(API_URL + '/humans/' + id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + user.token },
+      body: JSON.stringify(data),
+    });
+
+  if (response.status === 409) {
+    throw new Error("Conflict, data already exists");
+  } else if (!response.ok) {
+    throw new Error("error => response not ok");
+  } else {
+    return response
+  }
+} catch (e) {
+  console.log(e);
+}
+}
+
 
