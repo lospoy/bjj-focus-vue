@@ -1,7 +1,11 @@
 <template>
     <!-- MY STATS -->
     <div class="p-5 bg-dark-grey flex flex-col justify-center">
-      <h3 class="text-2xl text-light-grey">{{ title }}</h3>
+
+      <div class="flex flex-row gap-x-4 items-center">
+        <h3 class="text-2xl text-light-grey">{{ title }}</h3>
+        <v-btn v-if="userIsAdmin" class="max-w-10 text-xs bg-med-grey max-h-5" compact @click="copyIDToClipboard">Copy ID</v-btn>
+      </div>
       <div class="pl-2 px-2 animate-pulse" v-if="skeleton">
             <ul class="list-inside justify-center">
                 <li class="text-sm text-light-grey font-normal">You've attended {{ focusSessions }} Focus sessions.</li>
@@ -49,6 +53,8 @@ setup(props) {
   const stats = ref(null) // v-if
   const delay = 1000  // ms delay for skeletonService
   const sessionsStore = useSessionsStore()
+  const studentID = ref(props.id)
+  const userIsAdmin = JSON.parse(localStorage.getItem("BJJFocusUser")).role.admin
 
   const skeletonService = _ => {
     skeleton.value = true
@@ -87,6 +93,10 @@ setup(props) {
     }, delay);
   }
 
+  const copyIDToClipboard = () => {
+    navigator.clipboard.writeText(studentID.value);
+  };
+
   onMounted(() => {
     skeletonService()
     displayStudentData(props.id)
@@ -95,7 +105,9 @@ setup(props) {
   return {
       errorMsg,
       skeleton, stats,
-      totalTrained, firstSession, latestSession, focusSessions
+      totalTrained, firstSession, latestSession, focusSessions,
+      // COPY ID
+      studentID, copyIDToClipboard, userIsAdmin
   };
 },
 };
