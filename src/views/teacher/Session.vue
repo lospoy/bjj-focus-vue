@@ -116,7 +116,7 @@
 
 <script>
 import moment from 'moment'
-import { inject, onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import Switcher from '../../components/Switcher.vue'
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService'
 import { getAllSessions, saveSession } from '../../services/sessionService'
@@ -166,13 +166,11 @@ setup() {
   const thisWeeksTopicID = trainingStore.topics.thisWeek.ID
   topic.value = thisWeeksTopicID
 
-  // ATTENDANCE RELATED
+  // SESSION & ATTENDANCE RELATED
   const latestSessionSavedDate = ref(null)
   const latestSessionSavedTopic = ref(null)
   const student = ref(null)
   const date = ref(null)
-  const techniqueList = reactive([]) // Initialize empty array to show session techniques in DOM
-  const techniqueIdArray = reactive([]) // Initialize empty array to store technique ids for POST
   const humanIdList = ref([carlosIdObject])     // used in multicheckbox, has Carlos Campoy as default value to keep track of classes (teacher always attends)
   const activeAttendanceList = ref([])    // used in multicheckbox
   const inactiveAttendanceList = ref([])  // used in multicheckbox
@@ -217,13 +215,35 @@ setup() {
     }, 2500);
   }
 
-  // Date & Focus Lesson time formatting
-  function getDate() {
-    const focusLessonTime = 'T18:15:00Z'
-    // if date has not been selected, default to NOW
-    if(!date.value) { return moment().format() }
-    // otherwise return date selected
-    return date.value + focusLessonTime
+  // SAVE SESSION -> update attendance object and POST to API
+  // @'../../services/sessionService'
+  // POST to api/sessions
+  const sessionToAPI = async () => {
+    try {
+      const res = await saveSession({
+        when: {
+          date: getDate()
+        },
+        who: {
+          teacher: { _id: teacher.value },
+          // creates array with '_id' as key and human id string as value
+          students: humanIdList.value.reduce((s, a) => {
+            s.push({_id: a.id})
+            return s
+          }, [])
+          },
+          what: {
+            focus: { _id: topic.value }
+          }
+      });
+        // Success button visual feedback
+        if(res.status === 201) { await buttonSuccess() }
+    } catch (error) {
+      errorMsg.value = error.message;
+      setTimeout(() => {
+        errorMsg.value = null;
+      }, 5000);
+    }
   }
 
   // ACTIVE STUDENTS ATTENDANCE ARRAY
@@ -304,52 +324,32 @@ setup() {
     inactiveAttendanceList.value = await createInactiveStudentsAttendanceArray()
   }
 
+  // Date & Focus Lesson time formatting
+  function getDate() {
+    const focusLessonTime = 'T18:15:00Z'
+    // if date has not been selected, default to NOW
+    if(!date.value) { return moment().format() }
+    // otherwise return date selected
+    return date.value + focusLessonTime
+  }
+
   onMounted(() => {
     displayLatestSessionSaved()
     createAttendanceLists()
   })
 
-  // SAVE SESSION -> update attendance object and POST to API
-  const sessionToAPI = async () => {
-    try {
-      const res = await saveSession({
-        when: {
-          date: getDate()
-        },
-        who: {
-          teacher: { _id: teacher.value },
-          // creates array with '_id' as key and human id string as value
-          students: humanIdList.value.reduce((s, a) => {
-            s.push({_id: a.id})
-            return s
-          }, [])
-          },
-          what: {
-            focus: { _id: topic.value }
-          }
-      });
-        // Success button visual feedback
-        console.log(res.status)
-        if(res.status === 201) { await buttonSuccess() }
-    } catch (error) {
-      errorMsg.value = error.message;
-      setTimeout(() => {
-        errorMsg.value = null;
-      }, 5000);
-    }
-  }
-  
   return {
-    teacher, student, date, topic, statusMsg, errorMsg,
+    statusMsg, errorMsg,
+    // Topics
     backControl, mount, halfGuard, sideControl, closedGuard, deLaRiva, openGuard, turtle,
-    techniqueList, techniqueIdArray,
-    sessionToAPI, getDate,
+    // Button
     buttonColor, buttonTitle, buttonSuccess,
-    latestSessionSavedDate, latestSessionSavedTopic,
-    // STUDENT LIST & MULTICHECKBOX
+    // SESSION
+    sessionToAPI, getDate, latestSessionSavedDate, latestSessionSavedTopic, teacher, student, date, topic,
+    // Student List and Multi Checkbox
     activeAttendanceList, inactiveAttendanceList, humanIdList,
     // Switcher
-    inactiveCard, activeCard, cardRerenderKey
+    inactiveCard, activeCard, cardRerenderKey,
   }
 },
 }
