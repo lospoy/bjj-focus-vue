@@ -120,7 +120,12 @@ const getAllActiveHumans = asyncHandler(async (req, res) => {
 // @route   GET /api/humans/inactive
 // @access  Private
 const getAllInactiveHumans = asyncHandler(async (req, res) => {
-  const inactiveHumans = await Human.find({ $not: { trainingStatus: { active: true } } })
+  const inactiveHumans = await Human.find({
+    $or: [
+      { trainingStatus: { $exists: false } },
+      { 'trainingStatus.active': { $ne: true } }
+    ]
+  })
 
   // Check for user permission
   const isAdmin = req.user.role.admin === true
