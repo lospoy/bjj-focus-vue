@@ -6,19 +6,34 @@
     </div>
 
     <!-- STUDENT CHECKBOXES -->
-    <div class="p-8 flex flex-col items-center bg-dark-grey  rounded-md shadow-lg mb-4">
-      <h1 class="text-3xl text-light-grey self-center">STUDENTS STATS</h1>
-      <div class="flex flex-col items-center justify-center mt-4">
-        <MultiCheckbox
-          v-model:value="humanList"
-          :options="nameAndIdArray"
-        />
-      </div>
+    <div class="flex flex-col p-4 bg-dark-grey rounded-md shadow-lg mt-4 justify-center">
+          <Switcher
+            class="max-w-screen-sm py-1 px-2 mb-4"
+            :titleLeft="'Active'"
+            :titleRight="'Inactive'"
+          />
+          
+          <div class="flex flex-col gap-y-2 w-full items-center">
+          <!-- LEFT NAME LIST -->
+          <div :key="cardRerenderKey" v-if="activeCard" class="text-light-grey text-md">
+            <MultiCheckbox
+              v-model:value="humanIDList"
+              :options="activeAttendanceList"
+            />
+          </div>
+          <!-- RIGHT NAME LIST -->
+          <div :key="cardRerenderKey" v-if="inactiveCard" class="text-light-grey text-md">
+            <MultiCheckbox
+              v-model:value="humanIDList"
+              :options="inactiveAttendanceList"
+            />
+          </div>
+        </div>
     </div>
     
     <!-- STATS DISPLAY -->
         <StudentStats
-          v-for="human in humanList"
+          v-for="human in humanIDList"
           :fieldId="human.name"
           :label="human.name"
           :key="human"
@@ -30,62 +45,68 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref, toRaw } from "vue";
 import MultiCheckbox from "../../components/Multi-checkbox.vue";
 import StudentStats from "../../components/StudentStats.vue";
-import humanStore from "../../store/humanStore";
+import Switcher from '../../components/Switcher.vue';
 import { useHumanStore } from "../../store/humans";
 
 export default {
   name: "StudentList",
   components: {
     StudentStats,
-    MultiCheckbox
+    MultiCheckbox,
+    Switcher
   },
 setup() {
   // Variables
   const errorMsg = ref(null);
-  const humanList = ref([]) // used in multicheckbox
-  const nameAndIdArray = ref([]) // used in multicheckbox
+  const humanIDList = ref([]) // used in multicheckbox
+  const activeAttendanceList = ref([])    // used in multicheckbox
+  const inactiveAttendanceList = ref([])  // used in multicheckbox
   
   // Pinia Store
-  const allHumans = useHumanStore().allHumans
+  const activeHumans = useHumanStore().activeHumans
+  const inactiveHumans = useHumanStore().inactiveHumans
 
-  // ACTIVE STUDENTS ATTENDANCE ARRAY
-  // OUTPUT --> [ {id: "441d321e5b21ee1ce143945d", name: "Joe Schmoe"}, ] 
-  async function createActiveStudentsAttendanceArray() {
-
-    const activeHumans = allHumans.filter(human => human.trainingStatus)  // currently only "active" humnas have trainingStatus
-    const activeHumansIDArray = activeHumans.map(human => human._id)
-    const activeStudentsNameArray = await Promise.all(  // returns array of strings
-      activeHumansIDArray.map(id => {
-        return humanStore.methods.getStudentName(id)
-      })
-    )
-    
-    const activeStudentsnamesAndIDsArray = activeHumansIDArray.map((id, i) => { // creates array of objects
+  // ATTENDANCE ARRAY GENERATOR
+  async function createAttendanceArray(humanArray) {
+    const ids = humanArray.map(human => human._id)
+    const names = humanArray.map(human => toRaw(human.name))
+    const namesAndIDs = ids.map((id, i) => {
       return {
         id: id,
-        name: activeStudentsNameArray[i],
+        name: `${names[i].first} ${names[i].last}`,
       }
     })
-
-    // Displays ID under student's name
-
-
-    const sortedNamesAndIdsArray = activeStudentsnamesAndIDsArray.sort((a, b) => {
+    const sortedNamesAndIDs = namesAndIDs.sort((a, b) => {
       const firstNameA = a.name.split(" ")[0];
       const firstNameB = b.name.split(" ")[0];
       return firstNameA.localeCompare(firstNameB);
     });
-
-    return sortedNamesAndIdsArray
+    return sortedNamesAndIDs
   }
 
   // MULTI CHECKBOX
+  // Input needed => [{id: "441d321e5b21ee1ce143945d", name: "First Last"}, {...}]
   const getNameAndIdArray = async() => {
-    nameAndIdArray.value = await createActiveStudentsAttendanceArray()
+    activeAttendanceList.value = await createAttendanceArray(toRaw(activeHumans))
+    inactiveAttendanceList.value = await createAttendanceArray(toRaw(inactiveHumans))
   }
+
+  // SWITCHER
+  const activeCard = ref(true)  // used by switcher
+  const inactiveCard = ref(null)  // used by switcher
+  const emitter = inject('emitter')
+  const cardRerenderKey = ref(0) // works alongside the listener/emitter
+  emitter.on('switcherLeft', (value) => {
+      activeCard.value = true
+      inactiveCard.value = false
+  })
+  emitter.on('switcherRight', (value) => {
+      activeCard.value = false
+      inactiveCard.value = true
+  })
 
   onMounted(() => {
     getNameAndIdArray()
@@ -94,7 +115,7 @@ setup() {
   return {
       errorMsg,
       // MULTICHECKBOX
-      humanList, nameAndIdArray
+      humanIDList, activeAttendanceList, inactiveAttendanceList, cardRerenderKey, activeCard, inactiveCard
   };
 },
 };
