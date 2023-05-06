@@ -2,7 +2,6 @@
 const mongoose = require('mongoose')
 
 const humanSchema = mongoose.Schema(
-
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
