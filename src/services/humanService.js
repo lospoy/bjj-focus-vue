@@ -61,8 +61,6 @@ export async function getAllInactiveHumans() {
 export async function getHumanByID(id) {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
-    if(id.typeOf === number)
-
     try {
       const response = await fetch(API_URL + '/humans/' + id, {
         method: "GET",
