@@ -29,7 +29,9 @@ import SkillsChart from '../../components/SkillsChart.vue';
 import StudentStats from "../../components/StudentStats.vue";
 import ThisWeek from '../../components/ThisWeek.vue';
 import TopicsChart from '../../components/TopicsChart.vue';
-import { getAllHumans } from '../../services/humanService';
+import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService';
+import { getAllActiveHumans, getAllInactiveHumans } from '../../services/humanService';
+import { useFocusLessonsStore } from '../../store/focusLessons';
 import { useHumanStore } from '../../store/humans';
 import { useSessionsStore } from '../../store/sessions';
 import { useUserStore } from '../../store/user';
@@ -56,17 +58,21 @@ export default {
     });
 
     onMounted(async() => {
-      // Set user data in Pinia
+      // SET DATA IN PINIA
+      // Sessions data
       useSessionsStore().getAndSetSessionsData(humanID)
-
-      // Set AllHumans in Pinia
-      const allHumans = await getAllHumans()
-      useHumanStore().setAllHumans(allHumans)
+      // Humans data
+      const activeHumans = await getAllActiveHumans()
+      const inactiveHumans = await getAllInactiveHumans()
+      useHumanStore().setActiveHumans(activeHumans)
+      useHumanStore().setInactiveHumans(inactiveHumans)
+      // Focus Lesson data
+      const allFocusLessons = await getAllFocusLessons()
+      useFocusLessonsStore().setFocusLessons(allFocusLessons)
       
       // Set name on DOM
       humanName.value = userStore.human.name.first
-      if (useSessionsStore().sessions.weeksTrained !== "") sessionData.value = true
-    })
+      if (useSessionsStore().sessions.weeksTrained !== "") sessionData.value = true })
     
     return {
         errorMsg,
