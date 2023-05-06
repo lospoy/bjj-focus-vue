@@ -35,7 +35,7 @@ BJJ Focus is an Edtech App for combat sports students and instructors, currently
 - Tailwind, Vuetify, and custom reusable UI components
 - Object-oriented database model design with Mongoose (MongoDB)
 - Security with JWT authentication, redundant input validation, password hashing
-- 9 endpoint RESTful API and respective controllers/router
+- 10 endpoint RESTful API and respective controllers/router
 
 ## Example Screens
 Student side
