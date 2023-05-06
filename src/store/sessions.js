@@ -8,7 +8,10 @@ export const useSessionsStore = defineStore('sessions', () => {
     all: '',
     focus: '',
     first: '',
-    latest: '',
+    latest: {
+      date: '',
+      topicID: ''
+    },
     daysSinceLatest: '',
     weeksTrained: '',
     attended: '',
@@ -49,7 +52,8 @@ export const useSessionsStore = defineStore('sessions', () => {
     sessions.value.unattended = sessionsUnattended
     sessions.value.focus = focusSessions
     sessions.value.first = firstSession
-    sessions.value.latest = latestSessionAttended.when.date
+    sessions.value.latest.date = latestSessionAttended.when.date
+    sessions.value.latest.topicID = latestSessionAttended.what.focus._id
     sessions.value.daysSinceLatest = daysSinceLatestSession
     sessions.value.perTopic = sessionsPerTopic
     sessions.value.weeksTrained = weeksTrained
