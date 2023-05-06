@@ -65,7 +65,7 @@
         </form>
     </div>
 
-    <!-- ATTENDANCE -->
+    <!-- ATTENDANCE LIST -->
     <div class="p-4 bg-dark-grey rounded-md shadow-lg flex flex-col justify-center mt-4">
       <Switcher
           class="flex justify-center max-w-screen-sm py-1 px-2 mb-4"
@@ -116,12 +116,12 @@
 
 <script>
 import moment from 'moment'
-import { inject, onMounted, ref } from 'vue'
+import { inject, onMounted, ref, toRaw } from 'vue'
 import Switcher from '../../components/Switcher.vue'
-import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService'
-import { getAllSessions, saveSession } from '../../services/sessionService'
-import humanStore from "../../store/humanStore"
+import { saveSession } from '../../services/sessionService'
+import { useFocusLessonsStore } from "../../store/focusLessons"
 import { useHumanStore } from "../../store/humans"
+import { useSessionsStore } from "../../store/sessions"
 import { useTrainingStore } from "../../store/training"
 
 // components import
@@ -140,8 +140,11 @@ setup() {
   const errorMsg = ref(null)
 
   // Pinia Store
-  const allHumans = useHumanStore().allHumans
+  const activeHumans = useHumanStore().activeHumans
+  const inactiveHumans = useHumanStore().inactiveHumans
   const trainingStore = useTrainingStore()
+  const sessionStore = useSessionsStore()
+  const focusLessonStore = useFocusLessonsStore()
 
   // Focus Lesson IDs
   const backControl = "63476ca77c0c4048382acb04"
@@ -161,7 +164,7 @@ setup() {
 
   // TOPIC
   // This week's topic is being set by loading the ThisWeek component
-  // ThisWeek component is being loaded in the home page for sutdents and admin/teacher
+  // ThisWeek component is being loaded in the home page for students and admin/teacher
   const topic = ref(null)
   const thisWeeksTopicID = trainingStore.topics.thisWeek.ID
   topic.value = thisWeeksTopicID
@@ -171,49 +174,9 @@ setup() {
   const latestSessionSavedTopic = ref(null)
   const student = ref(null)
   const date = ref(null)
-  const humanIdList = ref([carlosIdObject])     // used in multicheckbox, has Carlos Campoy as default value to keep track of classes (teacher always attends)
+  const humanIdList = ref([carlosIdObject])// used in multicheckbox, has Carlos Campoy as default value to keep track of classes (teacher always attends)
   const activeAttendanceList = ref([])    // used in multicheckbox
   const inactiveAttendanceList = ref([])  // used in multicheckbox
-
-  // SWITCHER
-  const activeCard = ref(true)  // used by switcher
-  const inactiveCard = ref(null)  // used by switcher
-  const emitter = inject('emitter')
-  const cardRerenderKey = ref(0) // works alongside the listener/emitter
-  emitter.on('switcherLeft', (value) => {
-      activeCard.value = true
-      inactiveCard.value = false
-  })
-  emitter.on('switcherRight', (value) => {
-      activeCard.value = false
-      inactiveCard.value = true
-  })
-
-  // LAST SESSION SAVED CARD
-  async function displayLatestSessionSaved() {
-    const allSessions = await getAllSessions()
-    const allFocusLessons = await getAllFocusLessons()
-    const latestLessonId = allSessions[allSessions.length-1].what.focus._id
-    latestSessionSavedDate.value = new Date(allSessions[allSessions.length-1].when.date).toLocaleDateString()
-    latestSessionSavedTopic.value = allFocusLessons.filter(position => JSON.stringify(position._id).includes(latestLessonId))[0].topic
-  }
-        
-  // Button success visual feedback
-  let buttonColor = ref(null)
-  let buttonTitle = ref("Save")
-
-  const buttonSuccess = async () => {
-    buttonTitle.value = "Saving Session..."
-    buttonColor.value = "orange"
-    setTimeout(() => {
-        buttonTitle.value = "Session Saved"
-        buttonColor.value = "#33872a"
-    }, 900);
-    setTimeout(() => {
-        buttonTitle.value = "Save"
-        buttonColor.value = ""
-    }, 2500);
-  }
 
   // SAVE SESSION -> update attendance object and POST to API
   // @'../../services/sessionService'
@@ -231,13 +194,12 @@ setup() {
             s.push({_id: a.id})
             return s
           }, [])
-          },
-          what: {
-            focus: { _id: topic.value }
-          }
+        },
+        what: {
+          focus: { _id: topic.value }
+        }
       });
-        // Success button visual feedback
-        if(res.status === 201) { await buttonSuccess() }
+        if(res.status === 201) { await buttonSuccess() } // Success button visual feedback
     } catch (error) {
       errorMsg.value = error.message;
       setTimeout(() => {
@@ -246,91 +208,77 @@ setup() {
     }
   }
 
-  // ACTIVE STUDENTS ATTENDANCE ARRAY
-  // OUTPUT --> [ {id: "441d321e5b21ee1ce143945d", name: "Joe Schmoe"}, ] 
-  async function createActiveStudentsAttendanceArray() {
-
-    const activeHumans = allHumans.filter(human => human.trainingStatus)  // currently only "active" humnas have trainingStatus
-    const activeHumansIDArray = activeHumans.map(human => human._id)
-    const activeStudentsNameArray = await Promise.all(  // returns array of strings
-      activeHumansIDArray.map(id => {
-        return humanStore.methods.getStudentName(id)
-      })
-    )
-
-    const activeStudentsnamesAndIDsArray = activeHumansIDArray.map((id, i) => { // creates array of objects
+  // ATTENDANCE ARRAY GENERATOR
+  async function createAttendanceArray(humanArray) {
+    const ids = humanArray.map(human => human._id)
+    const names = humanArray.map(human => toRaw(human.name))
+    const namesAndIDs = ids.map((id, i) => {
       return {
         id: id,
-        name: activeStudentsNameArray[i],
+        name: `${names[i].first} ${names[i].last}`,
       }
     })
-
-    const sortedNamesAndIdsArray = activeStudentsnamesAndIDsArray.sort((a, b) => {
+    const sortedNamesAndIDs = namesAndIDs.sort((a, b) => {
       const firstNameA = a.name.split(" ")[0];
       const firstNameB = b.name.split(" ")[0];
       return firstNameA.localeCompare(firstNameB);
     });
-    
-    return sortedNamesAndIdsArray
-  }
-
-  // INACTIVE *NOT ACTIVE* STUDENTS ATTENDANCE ARRAY
-  // OUTPUT --> [ {id: "441d321e5b21ee1ce143945d", name: "Joe Schmoe"}, ] 
-  async function createInactiveStudentsAttendanceArray() {
-
-    const inactiveHumans = allHumans.filter(human => !human.trainingStatus)
-    const inactiveHumansIDArray = inactiveHumans.map(human => human._id)
-    const inactiveStudentsNameArray = await Promise.all(  // returns array of strings
-      inactiveHumansIDArray.map(id => { 
-        return humanStore.methods.getStudentName(id)
-      })
-    )
-
-    const studentsLatestAttendedSessionArray = await Promise.all( // returns array of last session attended by each human (objects)
-      inactiveHumansIDArray.map(id => { 
-        return humanStore.methods.getStudentLastAttendedSession(id)
-      })
-    )
-
-    const dates = []
-    for(let i = 0; i <= studentsLatestAttendedSessionArray.length; i++){ // extracts session.when.date from the session objects and stores in "dates" array
-      if (studentsLatestAttendedSessionArray[i] !== undefined) {
-        dates.push(studentsLatestAttendedSessionArray[i].when.date)
-      } else {
-        dates.push('No date')
-      }
-    }
-
-    const namesIdsLastDateArray = inactiveHumansIDArray.map((id, i) => { // creates array of objects
-      return {
-        id: id,
-         name: inactiveStudentsNameArray[i],
-         lastDate: dates[i]
-      }
-    })
-
-    const sortedNamesAndIdsArray = namesIdsLastDateArray.sort((a, b) => {
-      const firstNameA = a.name.split(" ")[0];
-      const firstNameB = b.name.split(" ")[0];
-      return firstNameA.localeCompare(firstNameB);
-    });
-    
-    return sortedNamesAndIdsArray
+    return sortedNamesAndIDs
   }
 
   // MULTI CHECKBOX
+  // Input needed => [{id: "441d321e5b21ee1ce143945d", name: "First Last"}, {...}]
   const createAttendanceLists = async() => {
-    activeAttendanceList.value = await createActiveStudentsAttendanceArray()
-    inactiveAttendanceList.value = await createInactiveStudentsAttendanceArray()
+    activeAttendanceList.value = await createAttendanceArray(toRaw(activeHumans))
+    inactiveAttendanceList.value = await createAttendanceArray(toRaw(inactiveHumans))
   }
 
   // Date & Focus Lesson time formatting
   function getDate() {
     const focusLessonTime = 'T18:15:00Z'
-    // if date has not been selected, default to NOW
-    if(!date.value) { return moment().format() }
-    // otherwise return date selected
-    return date.value + focusLessonTime
+    if(!date.value) { return moment().format() } // if date has not been selected, default to NOW
+    return date.value + focusLessonTime // otherwise return date selected
+  }
+
+  // LAST SESSION SAVED CARD
+  async function displayLatestSessionSaved() {
+    const sessions = sessionStore.sessions
+    const focusLessons = focusLessonStore.focusLessons
+    const latestLessonDate = sessions.latest.date
+    const latestLessonId = sessions.latest.topicID
+    latestSessionSavedDate.value = new Date(latestLessonDate).toLocaleDateString()
+    latestSessionSavedTopic.value = focusLessons.filter(position => JSON.stringify(position._id).includes(latestLessonId))[0].topic
+  }
+
+  // SWITCHER
+  const activeCard = ref(true)  // used by switcher
+  const inactiveCard = ref(null)  // used by switcher
+  const emitter = inject('emitter')
+  const cardRerenderKey = ref(0) // works alongside the listener/emitter
+  emitter.on('switcherLeft', (value) => {
+      activeCard.value = true
+      inactiveCard.value = false
+  })
+  emitter.on('switcherRight', (value) => {
+      activeCard.value = false
+      inactiveCard.value = true
+  })
+
+  // BUTTON success visual feedback
+  let buttonColor = ref(null)
+  let buttonTitle = ref("Save")
+
+  const buttonSuccess = async () => {
+    buttonTitle.value = "Saving Session..."
+    buttonColor.value = "orange"
+    setTimeout(() => {
+        buttonTitle.value = "Session Saved"
+        buttonColor.value = "#33872a"
+    }, 900);
+    setTimeout(() => {
+        buttonTitle.value = "Save"
+        buttonColor.value = ""
+    }, 2500);
   }
 
   onMounted(() => {
