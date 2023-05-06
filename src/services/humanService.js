@@ -1,17 +1,6 @@
 const API_URL = import.meta.env.VITE_API
-// import { getAuthHeader } from './userService';
 
-export async function getAllHumans() {
-    // ideally should be code below, but importing authHeader() doesn't work?
-    // only works when the header is written directly into the function
-
-    // try {
-    //   const response = await fetch(API_URL + '/humans', {
-    //     method: "GET",
-    //     headers: getAuthHeader()
-    //   });
-
-    // this one works
+async function getAllHumans() {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
     try {
@@ -21,7 +10,8 @@ export async function getAllHumans() {
       });
 
     if (!response.ok) {
-      throw new Error("error => response not ok");    } else {
+      throw new Error("error => response not ok")
+    } else {
       return await response.json();
     }
   } catch (e) {
@@ -30,9 +20,48 @@ export async function getAllHumans() {
   }
 }
 
-// GET HUMAN BY ID
-export async function getHuman(id) {
+async function getAllActiveHumans() {
+  let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
+
+  try {
+    const response = await fetch(API_URL + '/humans/active', {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + user.token }
+    });
+
+    if (!response.ok) {
+      throw new Error("error => response not ok")
+    } else {
+      return await response.json();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getAllInactiveHumans() {
+  let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
+
+  try {
+    const response = await fetch(API_URL + '/humans/inactive', {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + user.token }
+    });
+
+    if (!response.ok) {
+      throw new Error("error => response not ok")
+    } else {
+      return await response.json();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getHuman(id) {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
+
+    if(id.typeOf === number)
 
     try {
       const response = await fetch(API_URL + '/humans/' + id, {
@@ -51,7 +80,7 @@ export async function getHuman(id) {
   }
 }
 
-export async function createHuman(data) {
+async function createHuman(data) {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
     try {
@@ -73,7 +102,7 @@ export async function createHuman(data) {
   }
 }
 
-export async function updateHuman(id, data) {
+async function updateHuman(id, data) {
   let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
   try {
@@ -96,3 +125,11 @@ export async function updateHuman(id, data) {
 }
 
 
+module.exports = {
+  createHuman,
+  getHuman,
+  getAllHumans,
+  getAllActiveHumans,
+  getAllInactiveHumans,
+  updateHuman,
+}
