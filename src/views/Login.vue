@@ -52,7 +52,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Button from "../components/Button.vue";
-import { getHuman } from "../services/humanService";
+import { getHumanByID } from "../services/humanService";
 import { loginUser } from "../services/userService";
 import { useUserStore } from "../store/user";
 
@@ -79,7 +79,7 @@ export default {
 
     // Get human name and ID and set to Store @../../store/user
     async function getHumanNameAndId(humanID) {
-        const res = await getHuman(humanID)
+        const res = await getHumanByID(humanID)
         userStore.setHumanName(res.name)
     }
     

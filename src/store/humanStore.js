@@ -1,10 +1,10 @@
 // HUMAN STORE
-import { getHuman } from "../services/humanService";
+import { getHumanByID } from "../services/humanService";
 import { getAllSessions } from "../services/sessionService";
 
 const methods = { // [ "Fizz Mcbuzz", "Pepe papa", ]
   async getStudentName(id) {
-    const human = await getHuman(id)
+    const human = await getHumanByID(id)
     const humanName = human.name.first + " " + human.name.last
     return humanName
   },

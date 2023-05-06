@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API
 
-async function getAllHumans() {
+export async function getAllHumans() {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
     try {
@@ -20,7 +20,7 @@ async function getAllHumans() {
   }
 }
 
-async function getAllActiveHumans() {
+export async function getAllActiveHumans() {
   let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
   try {
@@ -39,7 +39,7 @@ async function getAllActiveHumans() {
   }
 }
 
-async function getAllInactiveHumans() {
+export async function getAllInactiveHumans() {
   let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
   try {
@@ -58,7 +58,7 @@ async function getAllInactiveHumans() {
   }
 }
 
-async function getHuman(id) {
+export async function getHumanByID(id) {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
     if(id.typeOf === number)
@@ -80,7 +80,7 @@ async function getHuman(id) {
   }
 }
 
-async function createHuman(data) {
+export async function createHuman(data) {
     let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
     try {
@@ -102,7 +102,7 @@ async function createHuman(data) {
   }
 }
 
-async function updateHuman(id, data) {
+export async function updateHuman(id, data) {
   let user = JSON.parse(localStorage.getItem("BJJFocusUser"))
 
   try {
@@ -122,14 +122,4 @@ async function updateHuman(id, data) {
 } catch (e) {
   console.log(e);
 }
-}
-
-
-module.exports = {
-  createHuman,
-  getHuman,
-  getAllHumans,
-  getAllActiveHumans,
-  getAllInactiveHumans,
-  updateHuman,
 }
