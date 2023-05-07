@@ -28,9 +28,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import StudentStats from '../../components/StudentStats.vue';
 import ThisWeek from '../../components/ThisWeek.vue';
+import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService';
+import { useFocusLessonsStore } from '../../store/focusLessons';
 import { useSessionsStore } from "../../store/sessions";
 import { useUserStore } from "../../store/user";
 
@@ -60,6 +62,13 @@ export default {
     //   but only if it has not been fetched within the last 30 min
     const humanID = userStore.human.id
     useSessionsStore().getAndSetSessionsData(humanID)
+
+    onMounted(async() => {
+      // SET DATA IN PINIA
+      // Focus Lesson data
+      const allFocusLessons = await getAllFocusLessons()
+      useFocusLessonsStore().setFocusLessons(allFocusLessons)
+    })
     
     return {
         errorMsg,

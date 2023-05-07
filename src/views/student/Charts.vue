@@ -20,7 +20,7 @@
               <div class="flex flex-col mt-2 w-full">
                 <ul class="space-y-1 ml-4 self-center">
                     <li class="text-light-grey text-sm font-normal">
-                      How balanced is your game?
+                      You'll likely have a preferred position already (which will change over time). However make sure none of these areas are trailing behind too much. If one of them is, talk to your coach!
                     </li>
                 </ul>
               </div>
@@ -37,7 +37,7 @@
             <div class="flex flex-col mt-2 w-full">
               <ul class="space-y-1 ml-4 self-center">
                   <li class="text-light-grey text-sm font-normal">
-                    How much have you practiced these skills?
+                    These skills represent the next level of your jiujitsu journey. Remember failing is a crucial part of learning. Make sure you master escapes first - you will feel confident that you can pull off moves and you will not be punished if you fail.
                   </li>
               </ul>
             </div>
@@ -51,10 +51,10 @@
 </template>
 
 <script>
-import { ref, inject } from "vue"; // inject is required for the emitter (EventBus)
-import TopicsChart from '../../components/TopicsChart.vue';
+import { inject, ref } from "vue"; // inject is required for the emitter (EventBus)
 import SkillsChart from '../../components/SkillsChart.vue';
 import Switcher from '../../components/Switcher.vue';
+import TopicsChart from '../../components/TopicsChart.vue';
 
 
 export default {

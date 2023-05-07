@@ -124,7 +124,7 @@ export default {
     
     setTimeout(() => {
       getLessonData()
-    }, 2000);
+    }, 50);
 
     return {
       topicData, chartOptions

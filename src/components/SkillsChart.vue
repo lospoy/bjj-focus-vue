@@ -151,7 +151,7 @@ export default {
     
     setTimeout(() => {
       processSkillData()
-    }, 2000);
+    }, 50);
 
     return {
       skillData, chartOptions, test1
