@@ -10,8 +10,8 @@
       <div class="flex flex-col pl-4 px-6 w-full">
             <div class="flex flex-col mt-2 w-full">
               <ul id="techniqueList" class="space-y-1 ml-4 self-center">
-                  <li class="text-light-grey text-sm">
-                    Find all your past sessions
+                  <li class="text-light-grey">
+                    Browse your past sessions, topics, and curriculum
                   </li>
               </ul>
             </div>
