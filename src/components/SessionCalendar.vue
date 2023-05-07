@@ -37,12 +37,16 @@
               <li class="text-3xl text-light-grey uppercase text-center -mb-3">{{ sessionTopic }}</li>
               <li class="text-sm text-light-grey uppercase text-center">session {{ attendedOrNot }}</li>
             </ul>
-            <div class="flex flex-col mt-6 pb-2 pl-3 w-full" v-if="attended">
+            <div class="flex flex-col w-full" v-if="attended">
+              
+              <h3 class="text-sm mt-4 text-light-grey">{{ sessionTopic }} curriculum</h3>
+              <div class="pb-2 pl-3 ">
               <ul id="techniqueList" class="space-y-1 justify-center list-disc">
                   <li class=" text-gold rounded-md text-sm font-normal" v-for="(item, index) of techniqueList" :key="index">
                     <span class="text-light-grey">{{ item }}</span>
                   </li>
               </ul>
+              </div>
             </div>
       </div>
     </div>
@@ -57,11 +61,11 @@
 
 <script>
 import { reactive, ref } from "vue";
-import { getAllFocusLessons } from "../services/bjj_services/focusLessonService";
 import { getMove } from "../services/bjj_services/moveService";
 import { getPosition } from "../services/bjj_services/positionService";
 import { getTechnique } from "../services/bjj_services/techniqueService";
 import { getVariation } from "../services/bjj_services/variationService";
+import { useFocusLessonsStore } from '../store/focusLessons';
 import { useSessionsStore } from "../store/sessions";
 
 export default {
@@ -77,7 +81,12 @@ export default {
     const sessionCardDate = ref(null)
     const selectedLesson = ref(null)
     const sessionTopic = ref(null)
-    
+
+    // Pinia Store
+    const focusLessonStore = useFocusLessonsStore()
+    const focusLessons = focusLessonStore.focusLessons
+    const sessionsStore = useSessionsStore()
+    const sessions = sessionsStore.sessions
 
     // Training data
     const studentTrainingData = ref(null)
@@ -85,92 +94,16 @@ export default {
     const attendedOrNot = ref(null)
     const attended = ref(null)
 
-    const getTopic = async(focusLessonId) => { // returns string
-      const allFocusLessons = await getAllFocusLessons()
-      return await allFocusLessons.filter(_id => JSON.stringify(_id).includes(focusLessonId))[0].topic
+    const getTopic = focusLessonId => { // returns string
+      return focusLessons.filter(_id => JSON.stringify(_id).includes(focusLessonId))[0].topic
     }
-
-    // Skeleton vars
-    const skeleton = ref(null)
-    const calendar = ref(null)
-    const sessionCardSkeleton = ref(null)
-    const afterSessionCardSkeleton = ref(null)
-    
-    const skeletonService = _ => {
-      skeleton.value = true
-      calendar.value = false
-      sessionCardSkeleton.value = true
-      afterSessionCardSkeleton.value = false
-
-      setTimeout(() => {
-        sessionCardSkeleton.value = false
-        afterSessionCardSkeleton.value = true
-      }, delay);
-
-      setTimeout(() => {
-        skeleton.value = false
-        calendar.value = true
-      }, delay + 3000);
-    }
-    skeletonService()
 
     // **************  CALENDAR ************** 
     // Variables
     const date = ref(null)
     const attributes = ref(null)
-    const sessions = useSessionsStore().sessions
     const unattendedSessions = sessions.unattended
     const attendedSessions = sessions.attended
-
-    // To improve speed, we're initially fetching only dates the user can see (current month), then the rest.
-    // We could create a function that filters sessions held on the current month.
-    // But since there's at most 8 sessions in one month, let's simply fetch the last 8 (attended and otherwise) sessions, then the rest.
-
-    // Cleaner code would involve a looping function that fetches say last 8 sessions,
-    // displays them, then fetches the next 8 sessions and displays them, etc. Until it reaches the first ever session.
-    // Then, since past sessions should not change, they could be stored locally and only fetch/update the sessions that happened
-    // since last session stored locally.
-    const lastEightAttendedSessions = attendedSessions.slice(0).slice(-8)
-    const lastEightUnattendedSessions = unattendedSessions.slice(0).slice(-8)
-
-    // Returns array of promises (attended sessions)
-    const lastEightAttendedPromise = lastEightAttendedSessions.map(async aS => ({
-      highlight: {
-        style: {
-          backgroundColor: '#ffcc41',
-          borderColor: '#ffcc41',
-        },
-        fillMode: 'outline',
-      },
-      popover: {
-        label: `${await getTopic(aS.what.focus._id)}`,
-      },
-      dates: aS.when.date
-    }))
-
-    // Returns array of promises (unattended sessions)
-    const lastEightUnattendedPromise = lastEightUnattendedSessions.map(async uS => ({
-      highlight: {
-        style: {
-          backgroundColor: 'rgba(247, 247, 247, .3)',
-          borderColor: 'rgba(247, 247, 247, 0)'
-        },
-        fillMode: 'outline'
-      },
-      popover: {
-        label: `${await getTopic(uS.what.focus._id)}`,
-      },
-      dates: uS.when.date
-    }))
-
-    // Returns resolved array of promises
-    const resolveFirst = async(arr1, arr2) => {
-      const res1 = await Promise.all(arr1)
-      const res2 = await Promise.all(arr2)
-      attributes.value = res1.concat(res2).concat(todayMarker)
-    }
-    resolveFirst(lastEightAttendedPromise, lastEightUnattendedPromise)
-    const attributesValueCache = attributes.value
     
     // Returns array of promises (attended sessions)
     const attendedPromise = attendedSessions.map(async aS => ({
@@ -202,6 +135,13 @@ export default {
       dates: uS.when.date
     }))
 
+    const resolvePromises = async(arr1, arr2) => {
+      const res1 = await Promise.all(arr1)
+      const res2 = await Promise.all(arr2)
+      attributes.value = res1.concat(res2).concat(todayMarker)
+    }
+    resolvePromises(attendedPromise, unattendedPromise)
+
     // Style for a marker that marks today's date
     const todayMarker = [{
         key: 'today',
@@ -209,26 +149,14 @@ export default {
         dates: new Date(),
       }]
 
-    // Returns resolved array of promises
-    const resolveTheRest = async(arr1, arr2) => {
-      const res1 = await Promise.all(arr1)
-      const res2 = await Promise.all(arr2)
-      attributes.value = res1.concat(res2).concat(attributesValueCache)
-    }
-    resolveTheRest(attendedPromise, unattendedPromise)
-
-
     // CLICKED SESSION DETAILS
     // DISPLAYS A DIV WITH SESSION DATA IF THE CLICKED DATE IS A FOCUS SESSION DATE
     const daySelected = day => {
       selectedDay.value = day.date.toISOString().slice(0, 10) // YYYY-MM-DD
-      const trainingData = store.methods.getStudent().training
-      const allSessions = trainingData.allSessions
-      const attendedDates = trainingData.attendedSessions.map(s => s.when.date.slice(0, 10)) // YYYY-MM-DD
+      const attendedDates = sessions.attended.map(s => s.when.date.slice(0, 10)) // YYYY-MM-DD
 
     const getFocusLessonTechniqueIDs = async(lessonID) => { // returns array of objects [ {id: 'string'}, ]
-      const allFocusLessons = await getAllFocusLessons()
-      const lessonTechniques = allFocusLessons.filter(_id => JSON.stringify(_id).includes(lessonID))[0].content.techniques // returns array of technique ids of a specific focus lesson
+      const lessonTechniques = focusLessons.filter(_id => JSON.stringify(_id).includes(lessonID))[0].content.techniques // returns array of technique ids of a specific focus lesson
       return lessonTechniques
     }
 
@@ -287,9 +215,9 @@ export default {
 
       // Displays data related to the session that was held on the clicked day (if any)
       const displaySessionData = async() => {
-        const sessionOnSelectedDay = allSessions.filter(s => s.when.date.includes(selectedDay.value))[0]
+        const sessionOnSelectedDay = sessions.all.filter(s => s.when.date.includes(selectedDay.value))[0]
         const attendedOnSelectedDay = attendedDates.filter(d => d.includes(selectedDay.value))[0]
-        const lessonOnSelectedDay = allSessions.filter(s => s.when.date.includes(selectedDay.value))[0]
+        const lessonOnSelectedDay = sessions.all.filter(s => s.when.date.includes(selectedDay.value))[0]
 
         
 
@@ -318,6 +246,29 @@ export default {
         displaySessionData()
     }
 
+    // Skeleton vars
+    const skeleton = ref(null)
+    const calendar = ref(null)
+    const sessionCardSkeleton = ref(null)
+    const afterSessionCardSkeleton = ref(null)
+    
+    const skeletonService = _ => {
+      skeleton.value = true
+      calendar.value = false
+      sessionCardSkeleton.value = true
+      afterSessionCardSkeleton.value = false
+
+      setTimeout(() => {
+        sessionCardSkeleton.value = false
+        afterSessionCardSkeleton.value = true
+      }, delay);
+
+      setTimeout(() => {
+        skeleton.value = false
+        calendar.value = true
+      }, delay + 1000);
+    }
+    skeletonService()
 
     return {
         errorMsg, date, attributes,
