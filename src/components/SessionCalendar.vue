@@ -52,7 +52,11 @@
     </div>
 
     <div class="p-5 bg-dark-grey rounded-md flex flex-col justify-center" v-if="noSessionCard">
-      <span class="flex justify-center">No session on this date</span>
+      <span class="text-light-grey flex justify-center">No session on this date</span>
+    </div>
+
+    <div class="p-5 bg-dark-grey rounded-md flex flex-col justify-center" v-if="!noSessionCard && !displaySessionCard">
+      <span class="text-light-grey flex justify-center">Click on a date to see more</span>
     </div>
 
       </div>
