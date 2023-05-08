@@ -1,20 +1,21 @@
 <template>
-<div class="flex flex-col bg-dark-grey mb-4 p-3 mt-2">
+<div class="flex flex-col bg-dark-grey mb-2 p-3 mt-2">
   <div class="flex flex-col px-4">
 
     <!-- TOPIC -->
     <h2 class="text-sm mt-2 text-med-grey2">This week's topic is</h2>
-    <h1 class="text-4xl text-white uppercase leading-8">{{ currentTopic }}</h1>
+    <h1 class="text-5xl text-white uppercase leading-10">{{ currentTopic }}</h1>
 
     <!-- SKILLS PERCENTAGES -->
     <div class="flex flex-col w-full" v-if="isTeacher">
       <div class="flex flex-col mt-2 w-full">
         <ul id="skillsList" class="-space-y-2">
             <li v-for="(item, index) of skillsList" :key="index">
-              <span class="text-med-grey2 text-xs">{{ item }}</span>
+              <span class="text-med-grey2 text-sm">{{ item }}</span>
             </li>
         </ul>
       </div>
+      <h2 class="text-xs text-med-grey2 leading-8">Next week: {{ nextTopic }}</h2>
     </div>
 
   </div>
@@ -23,7 +24,7 @@
 
 <script>
 import { onMounted, reactive, ref } from "vue";
-import { getAllFocusLessons } from "../services/bjj_services/focusLessonService";
+import { useFocusLessonsStore } from '../store/focusLessons';
 import { useTrainingStore } from "../store/training";
 import { useUserStore } from "../store/user";
 
@@ -32,6 +33,7 @@ export default {
   setup() {
     const userStore = useUserStore()
     const trainingStore = useTrainingStore()
+    const focusLessonStore = useFocusLessonsStore()
     const currentTopic = ref(null);
     const nextTopic = ref(null)
     const skillsList = reactive([])
@@ -99,9 +101,10 @@ export default {
 
 
     // **************  SKILLS PERCENTAGES **************
-    async function getSkills(focusLessonId) {
-      const allFocusLessons = await getAllFocusLessons()
-      return allFocusLessons.filter(_id => JSON.stringify(_id).includes(focusLessonId))[0].skills
+    function getSkills(focusLessonId) {
+      const allFocusLessons = focusLessonStore.focusLessons
+      const thisWeeksLesson = allFocusLessons.filter(lesson => JSON.stringify(lesson).includes(focusLessonId))[0]
+      return thisWeeksLesson.skills
     }
 
     function populateSkillsList(skillsObject) {
@@ -114,7 +117,7 @@ export default {
       setRole()
       try {
         if (role.admin || role.teacher) {
-          const currentTopicSkills = await getSkills(currentTopicId)
+          const currentTopicSkills = getSkills(currentTopicId)
           populateSkillsList(currentTopicSkills)
         }
       } catch (error) {

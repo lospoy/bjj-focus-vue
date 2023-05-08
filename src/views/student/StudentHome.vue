@@ -7,7 +7,7 @@
 
     <div class="flex flex-col rounded-md -space-y-3">
       <div class="flex flex-col w-full pl-7 py-10">
-        <h3 class="text-base text-med-grey2">Hi, {{ humanName }}!</h3>
+        <h3 class="text-6xl text-med-grey2">Hi, {{ humanName }}!</h3>
       </div>
       <StudentStats />
       <ThisWeek />
