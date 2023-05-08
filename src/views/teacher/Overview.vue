@@ -11,13 +11,15 @@
     </div>
 
     <!-- Components (cards) -->
-    
+    <div class=" rounded-md shadow-md">
       <ThisWeek />
+    </div>
+    <div v-if="loadComponent">
       <TopicsChart :id='humanID' />
       <SkillsChart :id='humanID' />
       <SessionCalendar v-if="sessionData" />
       <StudentStats :id='humanID' />
-    
+    </div>
 
   </div>
 </template>
@@ -73,11 +75,20 @@ export default {
       // Set name on DOM
       humanName.value = userStore.human.name.first
       if (useSessionsStore().sessions.weeksTrained !== "") sessionData.value = true })
+
+      // Component load delay
+      // Giving 1 second to the Pinia store to set the data needed to load the components
+      const loadComponent = ref(false)
+      setTimeout(() => {
+        loadComponent.value = true
+      }, 1000);
+
     
     return {
         errorMsg,
         humanName, humanID,
-        sessionData
+        sessionData,
+        loadComponent
     };
   },
 };
