@@ -20,7 +20,7 @@
 <p align="center">
   <a href="https://bjjfocus.com">Live Site</a> •
   <a href="#about-the-project">About The Project</a> •
-  <a href="#tech-details">Tech Details</a> •
+  <a href="#tech-details">Overview</a> •
   <a href="#example-screens">Example Screens</a> •
   <a href="#local-installation">Local Installation</a> •
   <a href="#credits">Credits</a>
@@ -29,7 +29,7 @@
 ## About The Project
 BJJ Focus is an Edtech web app for combat sports students and instructors, currently used by NYC's [Gentle Art Studio](https://www.gentleartstudio.com/). The BJJ Focus app helps teachers and students keep detailed track of attendance, curriculum structure, and student progress.
 
-## Tech Details
+## Overview
 - Vue3/Vite, Composition API
 - State management and cached resources with Pinia (Vuex 5)
 - Tailwind, Vuetify, and custom reusable UI components
