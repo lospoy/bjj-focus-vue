@@ -27,7 +27,7 @@
 </p>
 
 ## About The Project
-BJJ Focus is an Edtech App for combat sports students and instructors, currently used by NYC's [Gentle Art Studio](https://www.gentleartstudio.com/). The BJJ Focus app helps teachers and students keep detailed track of attendance, technique creation, curriculum structure, and student progress.
+BJJ Focus is an Edtech web app for combat sports students and instructors, currently used by NYC's [Gentle Art Studio](https://www.gentleartstudio.com/). The BJJ Focus app helps teachers and students keep detailed track of attendance, technique creation, curriculum structure, and student progress.
 
 ## Tech Details
 - Vue3/Vite, Composition API
