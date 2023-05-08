@@ -18,10 +18,9 @@
 </p>
 
 <p align="center">
-  <a href="https://bjjfocus.com">Live Site</a> •
   <a href="#about-the-project">About The Project</a> •
   <a href="#demo">Demo</a> •
-  <a href="#tech-details">Overview</a> •
+  <a href="#overview">Overview</a> •
   <a href="#example-screens">Example Screens</a> •
   <a href="#local-installation">Local Installation</a> •
   <a href="#credits">Credits</a>
@@ -31,7 +30,7 @@
 BJJ Focus is an Edtech web app for combat sports students and instructors, currently used by NYC's [Gentle Art Studio](https://www.gentleartstudio.com/). The BJJ Focus app helps teachers and students keep detailed track of attendance, curriculum structure, and student progress.
 
 ## Demo
-Try out the demo student account
+Try out the demo student account at www.bjjfocus.com
 <br>
 `` email: demo ``
 `` pass: demosan ``
