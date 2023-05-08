@@ -4,7 +4,7 @@
 
       <div class="flex flex-row gap-x-4 items-center">
         <h3 class="text-2xl text-light-grey">{{ title }}</h3>
-        <v-btn v-if="userIsAdmin" class="max-w-10 text-xs bg-med-grey max-h-5" compact @click="copyIDToClipboard">Copy ID</v-btn>
+        <v-btn v-if="userIsAdmin && titleIsSet" class="max-w-10 text-xs bg-med-grey max-h-5" compact @click="copyIDToClipboard">Copy ID</v-btn>
       </div>
       <div class="pl-2 px-2 animate-pulse" v-if="skeleton">
             <ul class="list-inside justify-center">
@@ -55,6 +55,7 @@ setup(props) {
   const sessionsStore = useSessionsStore()
   const studentID = ref(props.id)
   const userIsAdmin = JSON.parse(localStorage.getItem("BJJFocusUser")).role.admin
+  const titleIsSet = ref(props.title)
 
   const skeletonService = _ => {
     skeleton.value = true
@@ -107,7 +108,7 @@ setup(props) {
       skeleton, stats,
       totalTrained, firstSession, latestSession, focusSessions,
       // COPY ID
-      studentID, copyIDToClipboard, userIsAdmin
+      studentID, copyIDToClipboard, userIsAdmin, titleIsSet
   };
 },
 };
