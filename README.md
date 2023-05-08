@@ -39,14 +39,14 @@ BJJ Focus is an Edtech web app for combat sports students and instructors, curre
 
 ## Example Screens
 Student side
-<div align="center">
-    <img src="https://u.cubeupload.com/aa9988vvb/focususerscreensgh.png" width="100%">
+<div align="center" padding="0">
+    <img src="https://u.cubeupload.com/aa9988vvb/studentViews.png" width="100%">
 </div>
 <br>
 Admin side
 <br><br>
 <div align="center">
-    <img src="https://u.cubeupload.com/aa9988vvb/focusadminscreens.png" width="100%">
+    <img src="https://u.cubeupload.com/aa9988vvb/adminViews.png" width="100%">
 </div>
 
 ## Local Installation
