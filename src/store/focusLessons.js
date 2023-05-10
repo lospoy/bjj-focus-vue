@@ -3,6 +3,10 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useFocusLessonsStore = defineStore('focusLessons', () => {
+  const topics = ref({
+    thisWeek: '',
+    nextWeek: ''
+  })
   const focusLessons = ref([
     {  
       name: "Back Control",
@@ -91,8 +95,32 @@ export const useFocusLessonsStore = defineStore('focusLessons', () => {
       },
     ]
   }
+  // Gets the week number we are currently on since the startDate
+  function currentWeekNumber() {
+    // Day the classes started
+    const startDate = new Date("September 12, 2022 00:00:00")
+    const endDate = new Date()
+    const diffInMs = new Date(endDate) - new Date(startDate)
+    const diffInWeeks = diffInMs / (1000 * 60 * 60 * 24 ) / 7;
+    
+    return diffInWeeks
+  }
+  function getTopic(week) {
+    let topicIndex
+    if (week === 'current') topicIndex = Math.floor(currentWeekNumber() % 8)
+    // Using modulus to "loop back" to index 0 after reaching last index
+    if (week === 'next') topicIndex = Math.floor(((currentWeekNumber() +1) % 8))
+    
+    return focusLessons.value[topicIndex]
+  }
+
+  function setTopics(current, next) {
+    topics.value.thisWeek = current
+    topics.value.nextWeek = next
+  }
 
   return {
-    focusLessons, setFocusLessons
+    focusLessons, setFocusLessons,
+    topics, getTopic, setTopics
   }
 })
