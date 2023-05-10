@@ -1,5 +1,5 @@
 <template>
-<div class="flex flex-col bg-dark-grey mb-2 p-3 mt-2">
+<div class="flex flex-col bg-dark-grey mb-2 p-3 mt-2 rounded-md shadow-md">
   <div class="flex flex-col px-4">
 
     <!-- TOPIC -->
@@ -115,13 +115,9 @@ export default {
     
     onMounted(async() => {
       setRole()
-      try {
-        if (role.admin || role.teacher) {
-          const currentTopicSkills = getSkills(currentTopicId)
-          populateSkillsList(currentTopicSkills)
-        }
-      } catch (error) {
-        console.log(error)
+      if (isTeacher) {
+        const currentTopicSkills = getSkills(currentTopicId)
+        populateSkillsList(currentTopicSkills)
       }
     })
 
