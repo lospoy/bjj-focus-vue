@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getAllSessions } from "../services/sessionService";
+import { useFocusLessonsStore } from '../store/focusLessons';
 
 export const useSessionsStore = defineStore('sessions', () => {
   const sessions = ref({
@@ -41,12 +42,38 @@ export const useSessionsStore = defineStore('sessions', () => {
       obj[item]++;  //adds +1 every time it finds one
       return obj;
     }, {});
-    const arr = []
-    for (const [key, value] of Object.entries(sumOfTopics)) {
-      arr.push([key, value]);
-    }
-    const sessionsPerTopic = arr
 
+    // All this to create "perTopic"
+    // Matches the order in focusLesson store and makes sure both arrays are equal length
+    function matchAndSortArrays(arr, focus) {
+      const arrCopy = [...arr];
+      const missing = focus.filter((str) => !arrCopy.some((el) => el[0] === str));
+      missing.forEach((str) => arrCopy.push([str, 0]));
+      arrCopy.sort((a, b) => {
+        return focus.indexOf(a[0]) - focus.indexOf(b[0]);
+      });
+      return arrCopy;
+    }
+
+    function createRawPerTopic() {
+      const arr = []
+      for (const [key, value] of Object.entries(sumOfTopics)) {
+        arr.push([key, value]);
+      }
+      return arr
+    }
+    
+    function createPerTopic() {
+      const lessons = useFocusLessonsStore().focusLessons
+      const focus = lessons.map(lesson => lesson.id)
+      const raw = createRawPerTopic()
+      const perTopic = matchAndSortArrays(raw, focus)
+      
+      return perTopic
+    }
+
+  
+    // Assign values
     sessions.value.all = allSessions
     sessions.value.attended = sessionsAttended
     sessions.value.unattended = sessionsUnattended
@@ -55,7 +82,7 @@ export const useSessionsStore = defineStore('sessions', () => {
     sessions.value.latest.date = latestSessionAttended.when.date
     sessions.value.latest.topicID = latestSessionAttended.what.focus._id
     sessions.value.daysSinceLatest = daysSinceLatestSession
-    sessions.value.perTopic = sessionsPerTopic
+    sessions.value.perTopic = createPerTopic()
     sessions.value.weeksTrained = weeksTrained
   }
 
@@ -63,3 +90,6 @@ export const useSessionsStore = defineStore('sessions', () => {
     sessions, getAndSetSessionsData
   }
 })
+
+// Helper functions
+
