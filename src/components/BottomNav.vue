@@ -11,9 +11,6 @@
     <v-btn value="studentCalendarView" :to="{ name: 'StudentCalendarView' }">
       <v-icon>mdi-calendar-multiselect</v-icon>
     </v-btn>
-    <v-btn value="Settings" :to="{ name: 'Settings' }">
-      <v-icon>mdi-cog</v-icon>
-    </v-btn>
   </v-bottom-navigation>
 
   <!-- ADMIN NAV -->
@@ -26,9 +23,6 @@
     </v-btn>
     <v-btn value="session" :to="{ name: 'Session' }">
       <v-icon>mdi-calendar-plus</v-icon>
-    </v-btn>
-    <v-btn value="Settings" :to="{ name: 'Settings' }">
-      <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-bottom-navigation>
 
