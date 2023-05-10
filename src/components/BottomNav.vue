@@ -5,10 +5,10 @@
     <v-btn value="home" :to="{ name: 'StudentHome' }">
       <v-icon>mdi-home</v-icon>
     </v-btn>
-    <v-btn value="charts" :to="{ name: 'Charts' }">
+    <v-btn value="chartsView" :to="{ name: 'ChartsView' }">
       <v-icon>mdi-chart-box-outline</v-icon>
     </v-btn>
-    <v-btn value="studentSession" :to="{ name: 'StudentSession' }">
+    <v-btn value="studentCalendarView" :to="{ name: 'StudentCalendarView' }">
       <v-icon>mdi-calendar-multiselect</v-icon>
     </v-btn>
     <v-btn value="Settings" :to="{ name: 'Settings' }">
