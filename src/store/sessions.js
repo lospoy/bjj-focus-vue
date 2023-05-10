@@ -91,5 +91,3 @@ export const useSessionsStore = defineStore('sessions', () => {
   }
 })
 
-// Helper functions
-
