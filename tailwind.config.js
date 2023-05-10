@@ -9,12 +9,13 @@ module.exports = {
         "at-light-orange": "#d85a3b",
         "at-orange": "#a4442d",
         "light-grey": "#f7f7f7", // this one changes the charts background color
+        "light-grey2": "#727272",
+        "med-grey3": "#3d4244",
         "med-grey2": "#8f9b9f",
         "med-grey": "#4b5153",
         "dark-grey": "#292c2d",
         "gold": "#ffcc41",
         "light-gold": "#fff0c6"
-
       },
     },
     fontFamily: {

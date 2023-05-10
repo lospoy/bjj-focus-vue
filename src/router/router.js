@@ -2,10 +2,10 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Settings from "../views/Settings.vue";
-import Charts from "../views/student/Charts.vue";
+import ChartsView from "../views/student/ChartsView.vue";
 import PrivateClass from "../views/student/PrivateClass.vue";
+import StudentCalendarView from "../views/student/StudentCalendarView.vue";
 import StudentHome from "../views/student/StudentHome.vue";
-import StudentSession from "../views/student/StudentSession.vue";
 import Human from "../views/teacher/Human.vue";
 import Overview from "../views/teacher/Overview.vue";
 import Session from "../views/teacher/Session.vue";
@@ -65,8 +65,8 @@ const routes = [
   },
   {
     path: "/student/charts",
-    name: "Charts",
-    component: Charts,
+    name: "ChartsView",
+    component: ChartsView,
   },
   {
     path: "/student/private-class",
@@ -74,9 +74,9 @@ const routes = [
     component: PrivateClass,
   },
   {
-    path: "/student/session",
-    name: "StudentSession",
-    component: StudentSession,
+    path: "/student/calendar",
+    name: "StudentCalendarView",
+    component: StudentCalendarView,
   },
 ];
 

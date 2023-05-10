@@ -5,14 +5,11 @@
     <v-btn value="home" :to="{ name: 'StudentHome' }">
       <v-icon>mdi-home</v-icon>
     </v-btn>
-    <v-btn value="charts" :to="{ name: 'Charts' }">
+    <v-btn value="chartsView" :to="{ name: 'ChartsView' }">
       <v-icon>mdi-chart-box-outline</v-icon>
     </v-btn>
-    <v-btn value="studentSession" :to="{ name: 'StudentSession' }">
+    <v-btn value="studentCalendarView" :to="{ name: 'StudentCalendarView' }">
       <v-icon>mdi-calendar-multiselect</v-icon>
-    </v-btn>
-    <v-btn value="Settings" :to="{ name: 'Settings' }">
-      <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-bottom-navigation>
 
@@ -26,9 +23,6 @@
     </v-btn>
     <v-btn value="session" :to="{ name: 'Session' }">
       <v-icon>mdi-calendar-plus</v-icon>
-    </v-btn>
-    <v-btn value="Settings" :to="{ name: 'Settings' }">
-      <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-bottom-navigation>
 
