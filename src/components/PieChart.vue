@@ -56,16 +56,6 @@ setup() {
     ]
   })
 
-  // Topics
-  // const backControl = lessons.topic1.name
-  // const halfGuard = lessons.topic2.name
-  // const closedGuard = lessons.topic3.name
-  // const DLR = lessons.topic4.name
-  // const openGuard = lessons.topic5.name
-  // const sideControl = lessons.topic6.name
-  // const mount = lessons.topic7.name
-  // const turtle = lessons.topic8.name
-
   chartOptions.value = {
     responsive: true,
     maintainAspectRatio: true,
@@ -75,7 +65,7 @@ setup() {
         dataPoints: {display: false },
       }
     },
-    borderWidth: 10,
+    borderWidth: 3, // animation could change border as it loads
     borderColor: darkGrey
   }
 
@@ -91,47 +81,46 @@ setup() {
     return labels
   }
 
-  function createDataset(circlePosition, fill) {
+  function createBgColor(circlePosition, humanData) {
+
+    const filledOuter1 = `rgb(179, 179, 179)`
+    const filledOuter2 = `rgb(252, 252, 252)`
+    const filledMid1 = `rgb(96, 37, 116)`
+    const filledMid2 = `rgb(144, 56, 173)`
+    const filledInner1 = `rgb(204, 187, 0)`
+    const filledInner2 = `rgb(255, 240, 76)`
+  }
+
+  function createDataset(circlePosition) {
     const dataPoints = [2, 2, 2, 2, 2, 2, 2, 2]
     let chartWeight = 0
     let chartBgColor = []
-    let opacity = 0
 
-    fill ? opacity = 100 : opacity = 50
-
-    const outerColor1 = `rgba(179, 179, 179, ${opacity}`
-    const outerColor2 = `rgba(252, 252, 252, ${opacity}`
-    const midColor1 = `rgba(96, 37, 116, ${opacity}`
-    const midColor2 = `rgba(144, 56, 173, ${opacity}`
-    const innerColor1 = `rgba(204, 187, 0, ${opacity}`
-    const innerColor2 = `rgba(255, 240, 76, ${opacity}`
+    const emptyOuter1 = `rgb(179, 179, 179)`
+    const emptyOuter2 = `rgb(252, 252, 252)`
+    const emptyMid1 = `rgb(96, 37, 116)`
+    const emptyMid2 = `rgb(144, 56, 173)`
+    const emptyInner1 = `rgb(204, 187, 0)`
+    const emptyInner2 = `rgb(255, 240, 76)`
 
     if (circlePosition === 'outer') {
       chartWeight = 1
-      chartBgColor = [
-        outerColor1, outerColor2, outerColor1, outerColor2,
-        outerColor1, outerColor2, outerColor1, outerColor2,
-      ]
+      chartBgColor = [ emptyOuter1, emptyOuter2 ]
     }
     if (circlePosition === 'mid') {
       chartWeight = 2
-      chartBgColor = [
-        midColor1, midColor2, midColor1, midColor2,
-        midColor1, midColor2, midColor1, midColor2,
-      ]
+      chartBgColor = [ emptyMid1, emptyMid2 ]
     }
     if (circlePosition === 'inner') {
       chartWeight = 4
-      chartBgColor = [
-        innerColor1, innerColor2, innerColor1, innerColor2,
-        innerColor1, innerColor2, innerColor1, innerColor2,
-      ]
+      chartBgColor = [ emptyInner1, emptyInner2 ]
     }
 
     const datasetObj = {
       data: dataPoints,
       weight: chartWeight,
-      backgroundColor: chartBgColor
+      backgroundColor: '#4b5153',
+      borderColor: darkGrey
     }
 
     return datasetObj
@@ -140,12 +129,10 @@ setup() {
   chartData.value.labels = createLabels()
 
   chartData.value.datasets = [
-    createDataset('outer'),
+    createDataset('outer', true),
     createDataset('mid'),
     createDataset('inner'),
   ]
-
-  console.log(chartData.value)
 
   return {
     chartData, chartOptions
