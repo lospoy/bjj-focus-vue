@@ -103,7 +103,6 @@ export default {
             setTimeout(() => {
               const userLocal = JSON.parse(localStorage.getItem("BJJFocusUser"))
               const humanID = userLocal.human
-
               useUserStore().setUserDataAndHumanID(userLocal)
               getHumanNameAndId(humanID)
             }, 100);
@@ -111,7 +110,7 @@ export default {
             setTimeout(() => {
               if(userData.role.student) router.push({ name: "StudentHome" })
               if(userData.role.admin) router.push({ name: "Overview" })
-            }, 2000);
+            }, 500);
         }
       } catch (error) {
         errorMsg.value = "Error: incorrect login";
