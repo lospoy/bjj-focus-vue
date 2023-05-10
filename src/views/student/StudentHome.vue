@@ -6,7 +6,7 @@
     </div>
 
   <template v-if="isLoading" class>
-    <div class="flex flex-col rounded-md animate-pulse">
+    <div class="flex flex-col animate-pulse">
       <div class="flex flex-col w-full pl-7">
         <h3 class="text-6xl text-med-grey2">Loading...</h3>
       </div>
@@ -14,11 +14,8 @@
     </div>
   </template>
   <template v-else>
-    <div class="flex flex-col rounded-md">
-      <div class="flex flex-col w-full pl-7">
-        <h3 class="text-6xl text-med-grey2">Hi, {{ humanName }}!</h3>
-      </div>
-      <PieChart />
+    <div class="flex flex-col">
+      <ThisWeek />
     </div>
   </template>
   
@@ -27,7 +24,6 @@
 
 <script>
 import { onBeforeMount, onMounted, ref } from "vue";
-import PieChart from '../../components/PieChart.vue';
 import StudentStats from '../../components/StudentStats.vue';
 import ThisWeek from '../../components/ThisWeek.vue';
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService';
@@ -40,9 +36,12 @@ export default {
   components: {
     StudentStats,
     ThisWeek,
-    PieChart
   },
   setup() {
+    // Pinia
+    const sessionsStore = useSessionsStore()
+    const focusStore = useFocusLessonsStore()
+
     // Variables
     const errorMsg = ref(null);
     const userStore = useUserStore()
@@ -50,9 +49,10 @@ export default {
     const isLoading = ref(true)
   
     onBeforeMount(async() => {
-      useSessionsStore().getAndSetSessionsData(userStore.human.id)
+      sessionsStore.getAndSetSessionsData(userStore.human.id)
       const allFocusLessons = await getAllFocusLessons()
-      useFocusLessonsStore().setFocusLessons(allFocusLessons)
+      focusStore.setFocusLessons(allFocusLessons)
+      focusStore.setTopics(focusStore.getTopic('current'), focusStore.getTopic('next'))
     })
 
     onMounted(() => {
