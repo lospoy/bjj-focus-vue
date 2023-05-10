@@ -5,30 +5,29 @@
       <p class="text-red-500">{{ errorMsg }}</p>
     </div>
 
-    <div class="flex flex-col rounded-md -space-y-3">
-      <div class="flex flex-col w-full pl-7 py-10">
+  <template v-if="isLoading" class>
+    <div class="flex flex-col rounded-md animate-pulse">
+      <div class="flex flex-col w-full pl-7">
+        <h3 class="text-6xl text-med-grey2">Loading...</h3>
+      </div>
+
+    </div>
+  </template>
+  <template v-else>
+    <div class="flex flex-col rounded-md">
+      <div class="flex flex-col w-full pl-7">
         <h3 class="text-6xl text-med-grey2">Hi, {{ humanName }}!</h3>
       </div>
-      <StudentStats />
-      <ThisWeek />
+      <PieChart />
     </div>
-
-    <!-- BETA NOTE -->
-    <div class="flex flex-col pl-7 px-10 w-full mt-28">
-      <div class="flex flex-col mt-2 w-full">
-        <ul class="space-y-1 self-center">
-            <li class="text-med-grey2 text-xs font-normal">
-              Please share your feedback!
-            </li>
-        </ul>
-      </div>
-    </div>
-
+  </template>
+  
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
+import PieChart from '../../components/PieChart.vue';
 import StudentStats from '../../components/StudentStats.vue';
 import ThisWeek from '../../components/ThisWeek.vue';
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService';
@@ -40,39 +39,34 @@ export default {
   name: "studentHome",
   components: {
     StudentStats,
-    ThisWeek
+    ThisWeek,
+    PieChart
   },
   setup() {
     // Variables
     const errorMsg = ref(null);
     const userStore = useUserStore()
-    const humanName = ref(null)
-    
-    function checkHumanName() {
-      if(userStore.human.name === "") {
-        getHumanNameAndId()
-      }
-      humanName.value = userStore.human.name.first
-    }
-    checkHumanName()
-
-    // Fetches updated session data every time the user visits the student/home route
-    // Ideally session data would be semi-persistent:
-    //   session data fetched either on login or in student/home,
-    //   but only if it has not been fetched within the last 30 min
-    const humanID = userStore.human.id
-    useSessionsStore().getAndSetSessionsData(humanID)
-
-    onMounted(async() => {
-      // SET DATA IN PINIA
-      // Focus Lesson data
+    const humanName = ref('')
+    const isLoading = ref(true)
+  
+    onBeforeMount(async() => {
+      useSessionsStore().getAndSetSessionsData(userStore.human.id)
       const allFocusLessons = await getAllFocusLessons()
       useFocusLessonsStore().setFocusLessons(allFocusLessons)
+    })
+
+    onMounted(() => {
+      // Skeleton while fetching data
+      setTimeout(() => {
+        humanName.value = userStore.human.name.first
+        isLoading.value = false
+      }, 2000)
     })
     
     return {
         errorMsg,
         humanName,
+        isLoading
     };
   },
 };
