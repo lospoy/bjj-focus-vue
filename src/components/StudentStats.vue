@@ -1,34 +1,41 @@
 <template>
-    <!-- MY STATS -->
-    <div class="p-5 bg-dark-grey flex flex-col justify-center">
+<div class="p-5 bg-dark-grey flex flex-col justify-center rounded-md shadow-md items-center">
 
-      <div class="flex flex-row gap-x-4 items-center">
-        <h3 class="text-2xl text-light-grey">{{ title }}</h3>
-        <v-btn v-if="userIsAdmin && titleIsSet" class="max-w-10 text-xs bg-med-grey max-h-5" compact @click="copyIDToClipboard">Copy ID</v-btn>
-      </div>
-      <div class="pl-2 px-2 animate-pulse" v-if="skeleton">
-            <ul class="list-inside justify-center">
-                <li class="text-sm text-light-grey font-normal">You've attended {{ focusSessions }} Focus sessions.</li>
-                <li class="text-sm text-light-grey font-normal">Your most recent session was {{ latestSession }}.</li>
-                <li class="text-sm text-light-grey font-normal">Your first session was on {{ firstSession }}.</li>
-                <li class="text-sm text-light-grey font-normal">You've been doing Focus training for {{ totalTrained }}</li>
-            </ul>
-      </div>
-      <div class="pl-2 px-2" v-if="stats">
-            <ul class="list-inside justify-center">
-                <li class="text-sm text-light-grey font-normal">You've attended {{ focusSessions }} Focus sessions.</li>
-                <li class="text-sm text-light-grey font-normal">Your most recent session was {{ latestSession }}.</li>
-                <li class="text-sm text-light-grey font-normal">Your first session was on {{ firstSession }}.</li>
-                <li class="text-sm text-light-grey font-normal">You've been Focus training for {{ totalTrained }}</li>
-            </ul>
-      </div>
+  <div class="flex flex-row gap-x-4 items-center">
+    <h3 v-if="userIsAdmin" class="text-2xl text-light-grey">{{ title }}</h3>
+    <h3 v-if="!userIsAdmin" class="text-2xl text-light-grey pb-4">{{ title }}</h3>
+    <v-btn v-if="userIsAdmin && titleIsSet" class="max-w-10 text-xs bg-med-grey max-h-5" compact @click="copyIDToClipboard">Copy ID</v-btn>
+  </div>
+  
+  <template v-if="isLoading">
+  <div class="pl-2 px-24 rounded-md justify-center items-center animate-pulse">
+    <ul class="list-inside items-center text-light-grey text-sm">
+      <li>You've attended...</li>
+      <li>Your most recent session was...</li>
+      <li>Your first session was on...</li>
+      <li>You've been Focus training for...</li>
+    </ul>
+  </div>
+  </template>
 
-    </div>
+  <template v-else>
+  <div class="pl-2 px-2">
+    <ul class="list-inside justify-center text-light-grey text-sm">
+      <li>You've attended {{ focusSessions }} Focus sessions 🥷</li>
+      <li>Your most recent session was {{ latestSession }} days ago ⌛</li>
+      <li>Your first session was on {{ firstSession }} 🗓️</li>
+      <li>You've been Focus training for {{ totalTrained }}</li>
+    </ul>
+  </div>
+  </template>
+
+</div>
 </template>
 
 <script>
 import { onMounted, ref } from "vue";
 import { useSessionsStore } from "../store/sessions";
+import { useUserStore } from '../store/user';
 
 export default {
 name: "StudentStats",
@@ -43,72 +50,61 @@ props: {
   }
 },
 setup(props) {
+  // PINIA
+  const sessionsStore = useSessionsStore()
+  const sessions = sessionsStore.sessions
+  const userStore = useUserStore()
+  const userIsAdmin = userStore.user.role.admin
+
   // Variables
   const errorMsg = ref(null);
   const focusSessions = ref(null)
   const totalTrained = ref(null)
   const firstSession = ref(null)
   const latestSession = ref(null)
-  const skeleton = ref(null)  // v-if
-  const stats = ref(null) // v-if
-  const delay = 1000  // ms delay for skeletonService
-  const sessionsStore = useSessionsStore()
-  const studentID = ref(props.id)
-  const userIsAdmin = JSON.parse(localStorage.getItem("BJJFocusUser")).role.admin
+  const humanID = ref(props.id)
   const titleIsSet = ref(props.title)
+  const isLoading = ref(true)
 
-  const skeletonService = _ => {
-    skeleton.value = true
-    stats.value = false
-    setTimeout(() => {
-      skeleton.value = false
-      stats.value = true
-    }, delay);
-  }
-
+  // in case we want to see data from other users, humanID can be passed as a prop
   const displayStudentData = async(humanID) => {
-    latestSession.value = '...'
-    firstSession.value = '...'
-    totalTrained.value = '...'
-    focusSessions.value = "..."
-
-    if(humanID) { // in case we want to see data from other users, can be passed as a prop
+    if(humanID) { 
       sessionsStore.getAndSetSessionsData(humanID)
     }
-    const sessions = sessionsStore.sessions
+    
+    latestSession.value = sessions.daysSinceLatest
+    firstSession.value = new Date(sessions.first).toLocaleDateString()
+    focusSessions.value = sessions.focus
 
-    setTimeout(() => {
-      latestSession.value = `${sessions.daysSinceLatest} days ago`
-      firstSession.value = new Date(sessions.first).toLocaleDateString()
-      focusSessions.value = sessions.focus
-      const weeksTrained = sessions.weeksTrained
-      if (weeksTrained < 1) {
-          totalTrained.value = "Just Started!💪"
-      } else if (weeksTrained >= 1 && weeksTrained < 8) {
-          totalTrained.value = `${Math.floor(weeksTrained)} weeks🔥`
-      } else if (weeksTrained >= 8 && weeksTrained < 52) {
-          totalTrained.value = `${Math.floor(weeksTrained/4)} months⚡`
-      } else {
-          totalTrained.value = `${(weeksTrained/4/12).toFixed(2)} years⚡`
-      }    
-    }, delay);
+    const weeksTrained = sessions.weeksTrained
+    if (weeksTrained < 1) {
+      totalTrained.value = "Just Started!💪"
+    } else if (weeksTrained >= 1 && weeksTrained < 8) {
+      totalTrained.value = `${Math.floor(weeksTrained)} weeks🔥`
+    } else if (weeksTrained >= 8 && weeksTrained < 52) {
+      totalTrained.value = `${Math.floor(weeksTrained/4)} months⚡`
+    } else {
+      totalTrained.value = `${(weeksTrained/4/12).toFixed(2)} years⚡`
+    }    
   }
-
+  
   const copyIDToClipboard = () => {
-    navigator.clipboard.writeText(studentID.value);
+    navigator.clipboard.writeText(humanID.value);
   };
 
   onMounted(() => {
-    skeletonService()
-    displayStudentData(props.id)
+    // Skeleton while fetching data
+    setTimeout(() => {
+      displayStudentData(props.id)
+      isLoading.value = false
+    }, 3000)
   })
 
   return {
-      errorMsg,
-      skeleton, stats,
+      errorMsg, isLoading,
       totalTrained, firstSession, latestSession, focusSessions,
       // COPY ID
-      studentID, copyIDToClipboard, userIsAdmin, titleIsSet
+      humanID, copyIDToClipboard, userIsAdmin, titleIsSet
   };
 },
 };
