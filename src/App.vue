@@ -40,12 +40,7 @@ export default {
       router.push({ name: "Login" });
     } else {
       userStore.setUserDataAndHumanID(userLocal)
-      if(userStore.user.role.admin) {
-        router.push({ name: "Overview" });
-      }
-      if(userStore.user.role.student) {
-        router.push({ name: "StudentHome" });
-      }
+      router.push({ name: "Loading" })
     }
 
     return {
