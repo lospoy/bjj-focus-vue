@@ -105,6 +105,7 @@ export const useFocusLessonsStore = defineStore('focusLessons', () => {
     
     return diffInWeeks
   }
+
   function getTopic(week) {
     let topicIndex
     if (week === 'current') topicIndex = Math.floor(currentWeekNumber() % 8)
@@ -119,8 +120,13 @@ export const useFocusLessonsStore = defineStore('focusLessons', () => {
     topics.value.nextWeek = next
   }
 
+  function getLessonByID(id) {
+    const lesson = focusLessons.value.find(lesson => lesson.id === id)
+    return lesson
+  }
+
   return {
     focusLessons, setFocusLessons,
-    topics, getTopic, setTopics
+    topics, getTopic, setTopics, getLessonByID
   }
 })
