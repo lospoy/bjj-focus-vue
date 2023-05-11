@@ -122,7 +122,6 @@ import { saveSession } from '../../services/sessionService'
 import { useFocusLessonsStore } from "../../store/focusLessons"
 import { useHumanStore } from "../../store/humans"
 import { useSessionsStore } from "../../store/sessions"
-import { useTrainingStore } from "../../store/training"
 
 // components import
 import Button from "../../components/Button.vue"
@@ -142,7 +141,6 @@ setup() {
   // Pinia Store
   const activeHumans = useHumanStore().activeHumans
   const inactiveHumans = useHumanStore().inactiveHumans
-  const trainingStore = useTrainingStore()
   const sessionStore = useSessionsStore()
   const focusLessonStore = useFocusLessonsStore()
 
@@ -166,7 +164,7 @@ setup() {
   // This week's topic is being set by loading the ThisWeek component
   // ThisWeek component is being loaded in the home page for students and admin/teacher
   const topic = ref(null)
-  const thisWeeksTopicID = trainingStore.topics.thisWeek.ID
+  const thisWeeksTopicID = focusLessonStore.topics.thisWeek.id
   topic.value = thisWeeksTopicID
 
   // SESSION & ATTENDANCE RELATED
@@ -247,7 +245,7 @@ setup() {
     const latestLessonDate = sessions.latest.date
     const latestLessonId = sessions.latest.topicID
     latestSessionSavedDate.value = new Date(latestLessonDate).toLocaleDateString()
-    latestSessionSavedTopic.value = focusLessons.filter(position => JSON.stringify(position._id).includes(latestLessonId))[0].topic
+    latestSessionSavedTopic.value = focusLessons.filter(lesson => lesson.id.includes(latestLessonId))[0].name
   }
 
   // SWITCHER
