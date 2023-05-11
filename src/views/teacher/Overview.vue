@@ -5,11 +5,6 @@
       <p class="text-red-500">{{ errorMsg }}</p>
     </div>
 
-    <!-- Hi, {humanName}! -->
-    <div class="px-5 py-2">
-        <span class="flex text-xl text-white -mb-1">Hi, {{ humanName }}!</span>
-    </div>
-
     <!-- Components (cards) -->
     <div class=" rounded-md shadow-md">
       <ThisWeek />
