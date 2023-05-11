@@ -3,6 +3,16 @@ module.exports = {
   darkMode: "media",
   theme: {
     extend: {
+      animation: {
+        fadeIn: 'fadeIn .8s ease-in-out',
+      },
+      // that is actual animation
+      keyframes: theme => ({
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 100 },
+        },
+      }),
       colors: {
         "faint-peach": "#fff4f0",
         "at-faint-orange": "#fe6945",
@@ -14,6 +24,7 @@ module.exports = {
         "med-grey2": "#8f9b9f",
         "med-grey": "#4b5153",
         "dark-grey": "#292c2d",
+        "dark-grey2": "#2c2f30",
         "gold": "#ffcc41",
         "light-gold": "#fff0c6"
       },
