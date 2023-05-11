@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import Loading from "../views/Loading.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Settings from "../views/Settings.vue";
@@ -28,6 +29,11 @@ const routes = [
     path: "/settings",
     name: "Settings",
     component: Settings,
+  },
+  {
+    path: "/loginSuccess",
+    name: "Loading",
+    component: Loading,
   },
 
   // ADMIN ROUTES
