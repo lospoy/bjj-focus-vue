@@ -49,49 +49,60 @@ export const useFocusLessonsStore = defineStore('focusLessons', () => {
         name: "Back Control",
         id: "63476ca77c0c4048382acb04",
         skills: payload[0].skills,
-        techniqueIDs: payload[0].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[0].content.techniques.map(obj => obj._id),
+        info: `Back Control is all about bla bla`
       },
       {  
         name: "Half Guard",
         id: "634ed31717260c95e351de8d",
         skills: payload[2].skills,
-        techniqueIDs: payload[2].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[2].content.techniques.map(obj => obj._id),
+        info: `${focusLessons.value[1].name} should say Half Guard` 
       },
       {  
         name: "Closed Guard",
         id: "634ed77517260c95e351dfa3",
         skills: payload[4].skills,
-        techniqueIDs: payload[4].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[4].content.techniques.map(obj => obj._id),
+        info: {
+          guard: 'Posture control, angle, crossing their elbow',
+          passing: 'Inside control, posturing up',
+        }
       },
       {  
         name: "De La Riva",
         id: "634edb2337829d81a79048ab",
         skills: payload[5].skills,
-        techniqueIDs: payload[5].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[5].content.techniques.map(obj => obj._id),
+        info: `${focusLessons.value[3].name} should say Back Control`
       },
       {  
         name: "Open Guard",
         id: "638eaab8964f267814d40a89",
         skills: payload[6].skills,
-        techniqueIDs: payload[6].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[6].content.techniques.map(obj => obj._id),
+        info: `${focusLessons.value[4].name} should say Back Control`
       },
       {  
         name: "Side Control",
         id: "634ed53c17260c95e351decb",
         skills: payload[3].skills,
-        techniqueIDs: payload[3].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[3].content.techniques.map(obj => obj._id),
+        info: `${focusLessons.value[5].name} should say Back Control` 
       },
       {  
         name: "Mount",
         id: "634ecefa9f04894fb818c868",
         skills: payload[1].skills,
-        techniqueIDs: payload[1].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[1].content.techniques.map(obj => obj._id),
+        info: `${focusLessons.value[6].name} should say Back Control`
       },
       {  
         name: "Turtle",
         id: "638ead84964f267814d40ad7",
         skills: payload[7].skills,
-        techniqueIDs: payload[7].content.techniques.map(obj => obj._id) 
+        techniqueIDs: payload[7].content.techniques.map(obj => obj._id),
+        info: `${focusLessons.value[7].name} should say Back Control` 
       },
     ]
   }
