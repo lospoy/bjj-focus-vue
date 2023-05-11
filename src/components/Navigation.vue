@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-dark-grey text-white max-w-sm">
+  <header>
     <nav
       class="flex py-3 px-4 sm:flex-row items-center justify-between"
     >
@@ -10,10 +10,14 @@
         <span class="flex-grow"></span>
         <v-btn
           value="Settings" :to="{ name: 'Settings' }"
-          size="x-small"
+          size="small"
           class="bg-med-grey3 capitalize"
+          v-if="humanName"
           >
           <span class="justify-end text-light-grey">{{ humanName }}</span>
+          <v-icon class="text-light-grey">
+            mdi-account
+          </v-icon>
         </v-btn>
       </div>
     </nav>
