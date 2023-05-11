@@ -1,28 +1,43 @@
 <template>
-<div class="flex flex-col bg-dark-grey mb-2 p-3 mt-2">
-  
-  <template v-if="isLoading">
-  <div v-if="isStudent" class="flex flex-col px-4 animate-pulse">
-    <ul class="text-5xl uppercase space-y-1.5" style="line-height: 2.1rem;">
-        <li v-for="(el, i) in topicsArr" :key="i"
-          :class="[ i % 2 === 1 ? 'text-light-grey2 opacity-70' : 'text-med-grey3']"
-        >{{ el }}</li>
-      </ul>
-  </div>
-  </template>
-  <template v-else>
+<div class="flex flex-col bg-dark-grey mb-2 p-3 mt-4">
+
   <div v-if="isStudent" class="flex flex-col px-4">
-    <ul class="text-5xl uppercase space-y-1.5" style="line-height: 2.1rem;">
-        <li v-for="(el, i) in topicsArr" :key="i"
+    <ul class="text-5xl uppercase space-y-1.5 leading-[2.25rem] animate-fadeIn">
+      <li v-for="(el, i) in topicsArr" :key="i" @click="selectTopic(i)">
+        <!-- TOPIC TITLE -->
+        <h2 :class="[
+          el.name === currentTopic.name ? 'text-gold' : '',
+          i !== selectedTopicIndex && el.name === currentTopic.name ? 'text-gold opacity-30' : '',
+          i === selectedTopicIndex && el.name !== currentTopic.name ? 'text-light-grey' : '',
+          i % 2 === 1 && i !== selectedTopicIndex && el.name !== currentTopic.name ? 'text-light-grey2 opacity-70' : '',
+          i % 2 === 0 && i !== selectedTopicIndex && el.name !== currentTopic.name ? 'text-med-grey3' : '',
+        ]"
+        >{{ el.name }}
+        </h2>
+        <!-- INFO UNDER TITLE -->
+        
+        <div
+          v-if="selectedTopicIndex === i"
           :class="[
-            el === currentTopic.name ? 'text-[3.5rem] leading-10 text-gold pl-2 -ml-3 rounded-sm transition delay-500' : '',
-            i % 2 === 1 && el !== currentTopic.name ? 'text-light-grey2 opacity-70' : '',
-            i % 2 === 0 && el !== currentTopic.name ? 'text-med-grey3' : '',
-          ]"
-        >{{ el }}</li>
-      </ul>
+            'bg-gradient-to-r from-dark-grey to-dark-grey2 w-full ml-1 animate-fadeIn',
+            selectedTopicIndex !== i && el.name !== currentTopic.name ? 'animate-fadeIn' : '',
+            selectedTopicIndex === i && el.name === currentTopic.name ? 'animate-fadeIn' : ''
+          ]">
+          <ul class="text-base text-med-grey2 normal-case py-2 italic ml-4">
+            <li
+              v-if="el.name === currentTopic.name"
+            >{{ el.name }} is this week's topic</li>
+            <li
+              v-if="el.name === nextTopic.name"
+            >{{ el.name }} is next week's topic</li>
+            <li
+              v-if="el.name !== currentTopic.name && el.name !== nextTopic.name"
+            >{{ el.name }} another week</li>
+          </ul>         
+        </div>
+      </li>
+    </ul>
   </div>
-  </template>
   
   <div v-if="isTeacher" class="flex flex-col px-4">
     <!-- TOPIC -->
@@ -55,14 +70,14 @@ export default {
     // Pinia
     const userStore = useUserStore()
     const focusStore = useFocusLessonsStore()
-    const topicsArr = ref(focusStore.focusLessons.map(lesson => lesson.name))
+    const topicsArr = ref(focusStore.focusLessons)
     const currentTopic = ref(focusStore.topics.thisWeek);
     const nextTopic = ref(focusStore.topics.nextWeek);
     const skillsList = reactive([])
     const role = userStore.user.role
     const isTeacher = ref(null)
     const isStudent = ref(null)
-    const isLoading = ref(true)
+    const selectedTopicIndex = ref(2);
 
     function setRole() {
       if (role.admin || role.teacher) {
@@ -71,6 +86,10 @@ export default {
       if (role.student)  {
         isStudent.value = true
       }
+    }
+
+    function selectTopic(index) {
+      selectedTopicIndex.value = (selectedTopicIndex.value === index) ? -1 : index;
     }
 
     // If teacher, displays current topic skills to DOM
@@ -83,26 +102,14 @@ export default {
     onMounted(async() => {
       setRole()
       formatSkillsList(focusStore.topics.thisWeek.skills)
-
-      setTimeout(() => {
-        isLoading.value = false
-      }, 1000);
     })
     
     return {
       // TOPIC
-      currentTopic, nextTopic, topicsArr,
+      currentTopic, nextTopic, topicsArr, selectTopic, selectedTopicIndex,
       // SKILLS PERCENTAGES
       skillsList, isTeacher, isStudent,
-      // LOADING
-      isLoading
     };
   }
 };
 </script>
-<style>
-.text-color-animation {
-  transition: color 2s;
-  color: gold;
-}
-</style>
