@@ -52,7 +52,6 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Button from "../components/Button.vue";
-import { getHumanByID } from "../services/humanService";
 import { loginUser } from "../services/userService";
 import { useUserStore } from "../store/user";
 
@@ -62,7 +61,6 @@ export default {
     Button,
   },
   setup() {
-    const userStore = useUserStore()
     const router = useRouter();
     const user = useUserStore()
     const email = ref(null);
@@ -76,12 +74,6 @@ export default {
         buttonTitle.value = "Logging in..."
         buttonColor.value = "gold"
     }
-
-    // Get human name and ID and set to Store @../../store/user
-    async function getHumanNameAndId(humanID) {
-        const res = await getHumanByID(humanID)
-        userStore.setHumanName(res.name)
-    }
     
     // Login function
     const login = async () => {
@@ -94,22 +86,13 @@ export default {
         });
 
         const userData = await res.json()
-
         //  If successful login:
         if(res.status === 200) {
             //  Set user data to local storage
             localStorage.setItem("BJJFocusUser", JSON.stringify(userData));
 
             setTimeout(() => {
-              const userLocal = JSON.parse(localStorage.getItem("BJJFocusUser"))
-              const humanID = userLocal.human
-              useUserStore().setUserDataAndHumanID(userLocal)
-              getHumanNameAndId(humanID)
-            }, 100);
-
-            setTimeout(() => {
-              if(userData.role.student) router.push({ name: "StudentHome" })
-              if(userData.role.admin) router.push({ name: "Overview" })
+              router.push({ name: "Loading" })
             }, 500);
         }
       } catch (error) {
