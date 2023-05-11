@@ -79,7 +79,6 @@ export default {
     const errorMsg = ref(null);
     const delay = 100  // ms delay to sync the skeletonService and displayStudentData setTimeouts
     const selectedDay = ref(null)
-    const dayDescription = ref(null)
     const displaySessionCard = ref(null) // if true, displays selected session's data
     const noSessionCard = ref(null) // if true, displays "no session data"
     const sessionCardDate = ref(null)
@@ -88,21 +87,26 @@ export default {
 
     // Pinia Store
     const focusLessonStore = useFocusLessonsStore()
-    const focusLessons = focusLessonStore.focusLessons
     const sessionsStore = useSessionsStore()
     const sessions = sessionsStore.sessions
 
     // Training data
-    const studentTrainingData = ref(null)
     const techniqueList = reactive([])
     const attendedOrNot = ref(null)
     const attended = ref(null)
 
-    const getTopic = focusLessonId => { // returns string
-      return focusLessons.filter(_id => JSON.stringify(_id).includes(focusLessonId))[0].topic
+    function getTopic(id) { // returns string
+      const topic = focusLessonStore.getLessonByID(id).name
+      return topic
     }
 
     // **************  CALENDAR ************** 
+    // Style for a marker that marks today's date
+    const todayMarker = [{
+      key: 'today',
+      dot: 'yellow',
+      dates: new Date(),
+    }]
     // Variables
     const date = ref(null)
     const attributes = ref(null)
@@ -110,7 +114,7 @@ export default {
     const attendedSessions = sessions.attended
     
     // Returns array of promises (attended sessions)
-    const attendedPromise = attendedSessions.map(async aS => ({
+    const attendedCalendarData = attendedSessions.map(aS => ({
       highlight: {
         style: {
           backgroundColor: '#ffcc41',
@@ -119,13 +123,13 @@ export default {
         fillMode: 'outline',
       },
       popover: {
-        label: `${await getTopic(aS.what.focus._id)}`,
+        label: `${getTopic(aS.what.focus._id)}`,
       },
       dates: aS.when.date
     }))
 
     // Returns array of promises (unattended sessions)
-    const unattendedPromise = unattendedSessions.map(async uS => ({
+    const unattendedCalendarData = unattendedSessions.map(uS => ({
       highlight: {
         style: {
           backgroundColor: 'rgba(247, 247, 247, .3)',
@@ -134,24 +138,15 @@ export default {
         fillMode: 'outline'
       },
       popover: {
-        label: `${await getTopic(uS.what.focus._id)}`,
+        label: `${getTopic(uS.what.focus._id)}`,
       },
       dates: uS.when.date
     }))
 
-    const resolvePromises = async(arr1, arr2) => {
-      const res1 = await Promise.all(arr1)
-      const res2 = await Promise.all(arr2)
-      attributes.value = res1.concat(res2).concat(todayMarker)
+    function setCalendarAttendance (arr1, arr2) {
+      attributes.value = arr1.concat(arr2).concat(todayMarker)
     }
-    resolvePromises(attendedPromise, unattendedPromise)
-
-    // Style for a marker that marks today's date
-    const todayMarker = [{
-        key: 'today',
-        dot: 'yellow',
-        dates: new Date(),
-      }]
+    setCalendarAttendance(attendedCalendarData, unattendedCalendarData)
 
     // CLICKED SESSION DETAILS
     // DISPLAYS A DIV WITH SESSION DATA IF THE CLICKED DATE IS A FOCUS SESSION DATE
@@ -160,7 +155,7 @@ export default {
       const attendedDates = sessions.attended.map(s => s.when.date.slice(0, 10)) // YYYY-MM-DD
 
     const getFocusLessonTechniqueIDs = async(lessonID) => { // returns array of objects [ {id: 'string'}, ]
-      const lessonTechniques = focusLessons.filter(_id => JSON.stringify(_id).includes(lessonID))[0].content.techniques // returns array of technique ids of a specific focus lesson
+      const lessonTechniques = focusLessonStore.getLessonByID(lessonID).techniqueIDs // returns array of technique ids of a specific focus lesson
       return lessonTechniques
     }
 
@@ -170,9 +165,8 @@ export default {
     }
 
     const showSessionTechniques = async(lessonID) => {
-        const sessionTechniques = await getFocusLessonTechniqueIDs(lessonID) // ************* PASSING AN ID MANUALLY
-        const sessionTechniqueIDs = await Promise.all(sessionTechniques.map(e => e._id)) // returns array of string ids [ 'string', ]
-        const sessionTechniqueObjects = await Promise.all(sessionTechniqueIDs.map(id => getTechniqueObjectFromID(id))) // returns array of technique objects [ {...}, ]
+        const sessionTechniqueIDs = focusLessonStore.getLessonByID(lessonID).techniqueIDs // returns array of string ids [ 'string', ]
+        const sessionTechniqueObjects = sessionTechniqueIDs.map(id => getTechniqueObjectFromID(id)) // returns array of technique objects [ {...}, ]
 
         for await (const technique of sessionTechniqueObjects) {
             await decryptTechnique(technique.position, technique.move, technique.variation)
@@ -180,41 +174,34 @@ export default {
     }
 
     const decryptTechnique = async(positionId, moveId, variationId) => {
-        // unintended outcome: pushes to array but selecting a different day pushes more to the array
-        // intended: creates a new array each time
-        const positionObject = await getPosition(positionId)
-        const moveObject = await getMove(moveId)
-        const variationObject = await getVariation(variationId)
-
-        if (variationObject.name.english === 'Standard') {
-          variationObject.name.english = ''
-        }
-
-        if(moveObject.category.pass) {
-            techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Pass from ${positionObject.name.english}`)
-        }
-
-        if(moveObject.category.entry) {
-           techniqueList.push(`${variationObject.name.english} Entry ${moveObject.name.english} from ${positionObject.name.english}`)
-        }
-
-        if(moveObject.category.escape) {
-           techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Escape`)
-        }
-
-        if(moveObject.category.submission) {
-           techniqueList.push(`${variationObject.name.english} ${moveObject.name.english}`)
-        }
-
-        if(moveObject.category.sweep) {
-           techniqueList.push(`${variationObject.name.english} ${moveObject.name.english}`)
-        }
-
-        if(moveObject.category.takedown && positionObject.name.english === "Standing") {
-            techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Takedown`)
-        } else if (moveObject.category.takedown) {
-            techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Takedown from ${positionObject.name.english}`)
-        }
+      // unintended outcome: pushes to array but selecting a different day pushes more to the array
+      // intended: creates a new array each time
+      const positionObject = await getPosition(positionId)
+      const moveObject = await getMove(moveId)
+      const variationObject = await getVariation(variationId)
+      if (variationObject.name.english === 'Standard') {
+        variationObject.name.english = ''
+      }
+      if(moveObject.category.pass) {
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Pass from ${positionObject.name.english}`)
+      }
+      if(moveObject.category.entry) {
+        techniqueList.push(`${variationObject.name.english} Entry ${moveObject.name.english} from ${positionObject.name.english}`)
+      }
+      if(moveObject.category.escape) {
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Escape`)
+      }
+      if(moveObject.category.submission) {
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english}`)
+      }
+      if(moveObject.category.sweep) {
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english}`)
+      }
+      if(moveObject.category.takedown && positionObject.name.english === "Standing") {
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Takedown`)
+      } else if (moveObject.category.takedown) {
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Takedown from ${positionObject.name.english}`)
+      }
     }
 
       // Displays data related to the session that was held on the clicked day (if any)
@@ -222,8 +209,6 @@ export default {
         const sessionOnSelectedDay = sessions.all.filter(s => s.when.date.includes(selectedDay.value))[0]
         const attendedOnSelectedDay = attendedDates.filter(d => d.includes(selectedDay.value))[0]
         const lessonOnSelectedDay = sessions.all.filter(s => s.when.date.includes(selectedDay.value))[0]
-
-        
 
         if (sessionOnSelectedDay) {
           techniqueList.splice(0, techniqueList.length) // deletes all values so the array shows only the selected date
@@ -237,7 +222,6 @@ export default {
           displaySessionCard.value = false
           noSessionCard.value = true
         }
-
         if (attendedOnSelectedDay) {
           attendedOrNot.value = 'Attended'  // displays text to the user
           attended.value = true             // used for v-if
@@ -278,12 +262,11 @@ export default {
         errorMsg, date, attributes,
         // Skeleton
         skeleton, calendar, sessionCardSkeleton, afterSessionCardSkeleton,
-        dayDescription,
         // Session Card
         daySelected, selectedDay,
         displaySessionCard, sessionCardDate, noSessionCard,
         // Training data
-        studentTrainingData, techniqueList, selectedLesson, attendedOrNot, sessionTopic, attended
+        techniqueList, selectedLesson, attendedOrNot, sessionTopic, attended
     };
   },
 };
