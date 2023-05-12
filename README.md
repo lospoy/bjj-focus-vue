@@ -41,7 +41,7 @@ Try out the demo student account at www.bjjfocus.com
 - Tailwind, Vuetify, and custom reusable UI components
 - Object-oriented database model design with Mongoose (MongoDB)
 - Security with JWT authentication, redundant input validation, password hashing
-- 10 endpoint RESTful API and respective controllers/router
+- 11 endpoint RESTful API and respective controllers/router
 
 ## Example Screens
 Student side
