@@ -12,7 +12,7 @@
           value="Settings" :to="{ name: 'Settings' }"
           size="small"
           class="bg-med-grey3 capitalize"
-          v-if="humanName"
+          v-if="userIsLoggedIn"
           >
           <span class="justify-end text-light-grey">{{ humanName }}</span>
           <v-icon class="text-light-grey">
@@ -25,17 +25,29 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { useUserStore } from "../store/user";
 
 export default defineComponent ({
 name: "Navigation",
 setup() {
   const userStore = useUserStore()
-  const humanName = userStore.human.name.first
+  const userIsLoggedIn = ref(userStore.user.isLoggedIn);
+  const humanName = ref('');
+
+  // Watch userStore.user for changes and update userIsLoggedIn.value
+  watch(
+    () => userStore,
+    (newUser) => {
+      userIsLoggedIn.value = newUser.user.isLoggedIn;
+      humanName.value = newUser.human.name.first
+    },
+    { deep: true }
+  );
 
   return {
-    humanName
+    humanName,
+    userIsLoggedIn
   }
 }
 

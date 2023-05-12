@@ -30,10 +30,14 @@ export default {
     const userStore = useUserStore()
     const userIsLoggedIn = ref(userStore.user.isLoggedIn);
 
-    // Watch userIsLoggedIn for changes and update userIsLoggedIn.value
-    watch(() => userStore.user.isLoggedIn, isLoggedIn => {
-      userIsLoggedIn.value = isLoggedIn;
-    });
+    // Watch userStore.user for changes and update userIsLoggedIn.value
+    watch(
+      () => userStore,
+      (newUser) => {
+        userIsLoggedIn.value = newUser.user.isLoggedIn;
+      },
+      { deep: true }
+    );
 
     //  Checks for user on page load
     if (!userLocal) {

@@ -6,8 +6,8 @@
       <li v-for="(el, i) in topicsArr" :key="i" @click="selectTopic(i)">
         <!-- TOPIC TITLE -->
         <h2 :class="[
-          el.name === currentTopic.name ? 'text-gold' : '',
-          i !== selectedTopicIndex && el.name === currentTopic.name ? 'text-gold opacity-30' : '',
+          i === selectedTopicIndex && el.name === currentTopic.name ? 'text-gold' : '',
+          i !== selectedTopicIndex && el.name === currentTopic.name ? 'text-gold opacity-40' : '',
           i === selectedTopicIndex && el.name !== currentTopic.name ? 'text-light-grey' : '',
           i % 2 === 1 && i !== selectedTopicIndex && el.name !== currentTopic.name ? 'text-light-grey2 opacity-70' : '',
           i % 2 === 0 && i !== selectedTopicIndex && el.name !== currentTopic.name ? 'text-med-grey3' : '',
@@ -19,20 +19,11 @@
         <div
           v-if="selectedTopicIndex === i"
           :class="[
-            'bg-gradient-to-r from-dark-grey to-dark-grey2 w-full ml-1 animate-fadeIn',
-            selectedTopicIndex !== i && el.name !== currentTopic.name ? 'animate-fadeIn' : '',
+            'w-full ml-1 -mt-2 animate-fadeIn',
             selectedTopicIndex === i && el.name === currentTopic.name ? 'animate-fadeIn' : ''
           ]">
           <ul class="text-base text-med-grey2 normal-case py-2 italic ml-4">
-            <li
-              v-if="el.name === currentTopic.name"
-            >{{ el.name }} is this week's topic</li>
-            <li
-              v-if="el.name === nextTopic.name"
-            >{{ el.name }} is next week's topic</li>
-            <li
-              v-if="el.name !== currentTopic.name && el.name !== nextTopic.name"
-            >{{ el.name }} another week</li>
+            <li>{{ getTopicDate(weeksToTopic(i))}}</li>
           </ul>         
         </div>
       </li>
@@ -72,12 +63,44 @@ export default {
     const focusStore = useFocusLessonsStore()
     const topicsArr = ref(focusStore.focusLessons)
     const currentTopic = ref(focusStore.topics.thisWeek);
+    const currentTopicIndex = ref(getCurrentTopicIndex());
     const nextTopic = ref(focusStore.topics.nextWeek);
     const skillsList = reactive([])
     const role = userStore.user.role
     const isTeacher = ref(null)
     const isStudent = ref(null)
-    const selectedTopicIndex = ref(2);
+    const selectedTopicIndex = ref(currentTopicIndex);
+    const selectedTopicLesson = ref(currentTopic)
+    
+    // Calculates how many weeks to or from topic since one topic per week
+    function weeksToTopic(index) {
+      const currentTopicIndex = getCurrentTopicIndex()
+      const weeksDiff = index - currentTopicIndex
+
+      if (weeksDiff === 0) return 0
+      if (weeksDiff === 1) return +1
+      if (weeksDiff === -1) return -1
+
+      return weeksDiff
+    }
+
+    function getTopicDate(numWeeks) {
+      if (numWeeks === 0) {
+        return "is this week's topic";
+      } else if (numWeeks === 1) {
+        return "is next week's topic";
+      } else if (numWeeks === -1) {
+        return "was last week's topic";
+      } else {
+        const today = new Date();
+        const tuesdayOffset = (2 - today.getDay() + 7) % 7;
+        const nextTuesday = new Date(today.getTime() + tuesdayOffset * 864e5);
+        const targetTuesday = new Date(nextTuesday.getTime() + (numWeeks - 1) * 7 * 864e5);
+        const tuesdayDate = targetTuesday.toLocaleDateString();
+        return numWeeks < 0 ? `was held last on ${tuesdayDate}` : `will be held next on ${tuesdayDate}`;
+      }
+    };
+
 
     function setRole() {
       if (role.admin || role.teacher) {
@@ -86,6 +109,12 @@ export default {
       if (role.student)  {
         isStudent.value = true
       }
+    }
+
+    function getCurrentTopicIndex() {
+      const thisWeekId = focusStore.topics.thisWeek.id;
+      const focusLessonIndex = focusStore.focusLessons.findIndex(lesson => lesson.id === thisWeekId);
+      return focusLessonIndex;
     }
 
     function selectTopic(index) {
@@ -106,7 +135,8 @@ export default {
     
     return {
       // TOPIC
-      currentTopic, nextTopic, topicsArr, selectTopic, selectedTopicIndex,
+      currentTopic, nextTopic, topicsArr, selectTopic,
+      selectedTopicIndex, selectedTopicLesson, weeksToTopic, getTopicDate,
       // SKILLS PERCENTAGES
       skillsList, isTeacher, isStudent,
     };
