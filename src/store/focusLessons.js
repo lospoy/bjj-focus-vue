@@ -1,4 +1,4 @@
-// Used in @components/StudentStats.vue
+// Used in @components/AttendanceStats.vue
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
