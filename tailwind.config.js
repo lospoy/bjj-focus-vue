@@ -5,6 +5,10 @@ module.exports = {
     extend: {
       animation: {
         fadeIn: 'fadeIn .8s ease-in-out',
+        fadeInQuick: 'fadeIn .2s ease-in-out',
+        fadeOut: 'fadeOut .8s ease-in-out',
+        fadeInRight: 'fadeInRight .5s ease-out',
+        fadeInLeft: 'fadeInLeft .5s ease-out',
       },
       // that is actual animation
       keyframes: theme => ({
@@ -12,6 +16,18 @@ module.exports = {
           '0%': { opacity: 0 },
           '100%': { opacity: 100 },
         },
+        fadeOut: {
+          '0%': { opacity: 100 },
+          '100%': { opacity: 0 },
+        },
+        fadeInRight: {
+          '0%': { left: '3%' },
+          '100%': { left: '50%' },
+        },
+        fadeInLeft: {
+          '0%': { left: '50%', zIndex: '3' },
+          '100%': { left: '3%', zIndex: '3'},
+        }
       }),
       colors: {
         "faint-peach": "#fff4f0",
@@ -26,11 +42,13 @@ module.exports = {
         "dark-grey": "#292c2d",
         "dark-grey2": "#2c2f30",
         "gold": "#ffcc41",
-        "light-gold": "#fff0c6"
+        "light-gold": "#fff0c6",
+        "dark-purple": "#B130D990",
       },
     },
     fontFamily: {
-      Poppins: ["Poppins, sans-serif"],
+      poppins: ["Poppins, sans-serif"],
+      kanit: ["kanit, sans-serif"],
     },
     flex: {
       1: "1 1 0%",
