@@ -6,7 +6,7 @@
 import { ArcElement, Chart as ChartJS, Tooltip } from 'chart.js';
 import { ref } from 'vue';
 import { Pie } from 'vue-chartjs';
-import { useFocusLessonsStore } from '../store/focusLessons';
+import { useFocusLessonsStore } from '../../store/focusLessons';
 
 ChartJS.register(ArcElement, Tooltip)
 

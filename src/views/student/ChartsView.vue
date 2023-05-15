@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-screen-sm mx-auto py-5 px-3 mt-10">
+  <div class="max-w-screen-sm mx-auto py-5 px-3 mt-10 animate-fadeIn">
     <!-- Error Handling -->
     <div v-if="errorMsg" class="mb-10 p-4 rounded-md bg-light-grey shadow-lg">
       <p class="text-red-500">{{ errorMsg }}</p>
@@ -20,7 +20,7 @@
               <div class="flex flex-col mt-2 w-full">
                 <ul class="space-y-1 ml-4 self-center">
                     <li class="text-light-grey font-normal">
-                      You'll likely have a preferred position, but make sure none of these areas are trailing behind too much.
+                      You've been working on these Focus fundamentals. Make sure to maintain balance across all eight.
                     </li>
                 </ul>
               </div>
@@ -37,7 +37,7 @@
             <div class="flex flex-col mt-2 w-full">
               <ul class="space-y-1 ml-4 self-center">
                   <li class="text-light-grey font-normal">
-                    These skills represent the next level of your jiujitsu journey. Failing is a crucial part of learning: master escapes first.
+                    Your BJJ Focus practice breaks down into these main skills. Escapes are the most important, regardless of level.
                   </li>
               </ul>
             </div>
@@ -52,9 +52,9 @@
 
 <script>
 import { inject, ref } from "vue"; // inject is required for the emitter (EventBus)
-import SkillsChart from '../../components/SkillsChart.vue';
+import SkillsChart from '../../components/Charts/SkillsChart.vue';
+import TopicsChart from '../../components/Charts/TopicsChart.vue';
 import Switcher from '../../components/Switcher.vue';
-import TopicsChart from '../../components/TopicsChart.vue';
 
 
 export default {

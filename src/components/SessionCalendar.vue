@@ -1,14 +1,6 @@
 <template>
     <!-- CALENDAR -->
-    <div class="bg-dark-grey rounded-md shadow-md border-0 flex flex-col mb-4 justify-center">
-      <div class="">
-      <!-- Skeleton loader (no data) -->
-      <v-calendar
-        class="animate-pulse"
-        is-expanded
-        v-show="skeleton"
-        style="background-color: #4b5153; border: 0;"
-      />
+    <div class="bg-dark-grey rounded-md shadow-md border-0 flex flex-col mb-4 justify-center animate-fadeIn">
       <!-- Actual calendar with data -->
       <v-calendar
         is-expanded
@@ -16,7 +8,6 @@
         color="yellow"
         :attributes="attributes"
         @dayclick = 'daySelected'
-        v-show="calendar"
         class="calendar-style"
       >
 
@@ -55,12 +46,10 @@
       <span class="text-light-grey flex justify-center">No session on this date</span>
     </div>
 
-    <div class="p-5 bg-dark-grey rounded-md flex flex-col justify-center" v-if="!noSessionCard && !displaySessionCard">
-      <span class="text-light-grey flex justify-center">Click on a date to see more</span>
+    <div class="py-3 px-6 bg-dark-grey rounded-md flex flex-col justify-center" v-if="!noSessionCard && !displaySessionCard">
+      <span class="text-light-grey flex justify-center text-sm">Click on a date to view more</span>
     </div>
-
-      </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -77,7 +66,6 @@ export default {
   setup() {
     // Variables
     const errorMsg = ref(null);
-    const delay = 100  // ms delay to sync the skeletonService and displayStudentData setTimeouts
     const selectedDay = ref(null)
     const displaySessionCard = ref(null) // if true, displays selected session's data
     const noSessionCard = ref(null) // if true, displays "no session data"
@@ -234,34 +222,8 @@ export default {
         displaySessionData()
     }
 
-    // Skeleton vars
-    const skeleton = ref(null)
-    const calendar = ref(null)
-    const sessionCardSkeleton = ref(null)
-    const afterSessionCardSkeleton = ref(null)
-    
-    const skeletonService = _ => {
-      skeleton.value = true
-      calendar.value = false
-      sessionCardSkeleton.value = true
-      afterSessionCardSkeleton.value = false
-
-      setTimeout(() => {
-        sessionCardSkeleton.value = false
-        afterSessionCardSkeleton.value = true
-      }, delay);
-
-      setTimeout(() => {
-        skeleton.value = false
-        calendar.value = true
-      }, delay + 1000);
-    }
-    skeletonService()
-
     return {
         errorMsg, date, attributes,
-        // Skeleton
-        skeleton, calendar, sessionCardSkeleton, afterSessionCardSkeleton,
         // Session Card
         daySelected, selectedDay,
         displaySessionCard, sessionCardDate, noSessionCard,

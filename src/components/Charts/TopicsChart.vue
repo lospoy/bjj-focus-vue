@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col px-2 bg-dark-grey text-light-grey rounded-md shadow-md justify-center mb-2">
+    <div class="flex flex-col px-2 bg-dark-grey rounded-md shadow-md justify-center mb-2 animate-fadeIn">
       
         <bar-chart
           :data="topicData"
@@ -7,8 +7,8 @@
             barThickness: 30,
             borderRadius: 3,
             borderWidth: 0,
-            backgroundColor:'#d8c93b95',
-            color:'#292c2d'
+            backgroundColor:'#ffcc41',
+            colors:'#292c2d'
           }"
           :library="chartOptions"
         >
@@ -19,7 +19,7 @@
 
 <script>
 import { ref } from "vue";
-import { useSessionsStore } from "../store/sessions";
+import { useSessionsStore } from "../../store/sessions";
 
 export default {
   name: "TopicsChart",
@@ -60,9 +60,11 @@ export default {
             padding: 10,
             mirror: true,
             font: {
-              size: 12
+              size: 12,
+              weight: 400,
+              family: 'Kanit'
             },
-            color: '#f7f7f7',
+            color: '#6d7679',
             z: 1
           },
           border: {

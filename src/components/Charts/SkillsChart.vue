@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col px-2 bg-dark-grey rounded-md shadow-md justify-center mb-2">
+    <div class="flex flex-col px-2 bg-dark-grey rounded-md shadow-md justify-center mb-2 animate-fadeIn">
 
           <bar-chart
             :data="skillData"
@@ -18,8 +18,8 @@
 
 <script>
 import { ref } from "vue";
-import { getFocusLesson } from "../services/bjj_services/focusLessonService";
-import { useSessionsStore } from "../store/sessions";
+import { getFocusLesson } from "../../services/bjj_services/focusLessonService";
+import { useSessionsStore } from "../../store/sessions";
 
 export default {
   name: "SkillsChart",
@@ -62,6 +62,8 @@ export default {
             mirror: true,
             font: {
               size: 12,
+              weight: 400,
+              family: 'Kanit'
             },
             color: '#f7f7f7',
             z: 1

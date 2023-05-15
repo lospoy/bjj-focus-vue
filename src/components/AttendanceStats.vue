@@ -1,9 +1,8 @@
 <template>
-<div class="p-5 bg-dark-grey flex flex-col justify-center rounded-md shadow-md items-center">
+<div class="p-5 bg-dark-grey flex flex-col justify-center rounded-md shadow-md items-center animate-fadeIn">
 
   <div class="flex flex-row gap-x-4 items-center">
     <h3 v-if="userIsAdmin" class="text-2xl text-light-grey">{{ title }}</h3>
-    <h3 v-if="!userIsAdmin" class="text-2xl text-light-grey pb-4">{{ title }}</h3>
     <v-btn v-if="userIsAdmin && titleIsSet" class="max-w-10 text-xs bg-med-grey max-h-5" compact @click="copyIDToClipboard">Copy ID</v-btn>
   </div>
   
@@ -38,7 +37,7 @@ import { useSessionsStore } from "../store/sessions";
 import { useUserStore } from '../store/user';
 
 export default {
-name: "StudentStats",
+name: "AttendanceStats",
 props: {
   title: {
       type: String,
@@ -97,7 +96,7 @@ setup(props) {
     setTimeout(() => {
       displayStudentData(props.id)
       isLoading.value = false
-    }, 3000)
+    }, 100)
   })
 
   return {

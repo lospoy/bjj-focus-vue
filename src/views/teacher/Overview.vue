@@ -13,7 +13,7 @@
       <TopicsChart :id='humanID' />
       <SkillsChart :id='humanID' />
       <SessionCalendar v-if="sessionData" />
-      <StudentStats :id='humanID' />
+      <AttendanceStats :id='humanID' />
     </div>
 
   </div>
@@ -21,11 +21,11 @@
 
 <script>
 import { onMounted, ref, watch } from "vue";
+import AttendanceStats from "../../components/AttendanceStats.vue";
+import SkillsChart from '../../components/Charts/SkillsChart.vue';
+import TopicsChart from '../../components/Charts/TopicsChart.vue';
 import SessionCalendar from "../../components/SessionCalendar.vue";
-import SkillsChart from '../../components/SkillsChart.vue';
-import StudentStats from "../../components/StudentStats.vue";
 import ThisWeek from '../../components/ThisWeek.vue';
-import TopicsChart from '../../components/TopicsChart.vue';
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService';
 import { getAllActiveHumans, getAllInactiveHumans } from '../../services/humanService';
 import { useFocusLessonsStore } from '../../store/focusLessons';
@@ -37,7 +37,7 @@ export default {
   name: "overview",
   components: {
     SessionCalendar,
-    StudentStats,
+    AttendanceStats,
     ThisWeek,
     TopicsChart,
     SkillsChart
