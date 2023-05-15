@@ -32,7 +32,7 @@
     </div>
     
     <!-- STATS DISPLAY -->
-        <StudentStats
+        <AttendanceStats
           v-for="human in humanIDList"
           :fieldId="human.name"
           :label="human.name"
@@ -46,15 +46,15 @@
 
 <script>
 import { inject, onMounted, ref, toRaw } from "vue";
+import AttendanceStats from "../../components/AttendanceStats.vue";
 import MultiCheckbox from "../../components/Multi-checkbox.vue";
-import StudentStats from "../../components/StudentStats.vue";
 import Switcher from '../../components/Switcher.vue';
 import { useHumanStore } from "../../store/humans";
 
 export default {
   name: "StudentList",
   components: {
-    StudentStats,
+    AttendanceStats,
     MultiCheckbox,
     Switcher
   },
