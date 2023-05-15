@@ -2,10 +2,12 @@
 <div class="flex flex-col bg-dark-grey mb-2 p-3 mt-4">
 
   <div v-if="isStudent" class="flex flex-col px-4">
-    <ul class="text-5xl uppercase space-y-1.5 leading-[2.25rem] animate-fadeIn">
+    <ul class="text-5xl uppercase space-y-1.5 leading-8 animate-fadeIn">
       <li v-for="(el, i) in topicsArr" :key="i" @click="selectTopic(i)">
         <!-- TOPIC TITLE -->
-        <h2 :class="[
+        <h2
+          class="tracking-tight font-kanit"
+          :class="[
           i === selectedTopicIndex && el.name === currentTopic.name ? 'text-gold' : '',
           i !== selectedTopicIndex && el.name === currentTopic.name ? 'text-gold opacity-40' : '',
           i === selectedTopicIndex && el.name !== currentTopic.name ? 'text-light-grey' : '',
@@ -77,30 +79,30 @@ export default {
       const currentTopicIndex = getCurrentTopicIndex()
       const weeksDiff = index - currentTopicIndex
 
-      if (weeksDiff === 0) return 0
-      if (weeksDiff === 1) return +1
-      if (weeksDiff === -1) return -1
+      if (weeksDiff === 0) return 0;
+      if (weeksDiff === 1) return +1;
+      if (weeksDiff === -1) return -1;
+      if (weeksDiff <= -2) return weeksDiff + 8
 
       return weeksDiff
     }
 
     function getTopicDate(numWeeks) {
       if (numWeeks === 0) {
-        return "is this week's topic";
+        return "⬑ this week's topic";
       } else if (numWeeks === 1) {
-        return "is next week's topic";
+        return "⬑ next week's topic";
       } else if (numWeeks === -1) {
-        return "was last week's topic";
+        return "⬑ last week's topic";
       } else {
         const today = new Date();
         const tuesdayOffset = (2 - today.getDay() + 7) % 7;
         const nextTuesday = new Date(today.getTime() + tuesdayOffset * 864e5);
-        const targetTuesday = new Date(nextTuesday.getTime() + (numWeeks - 1) * 7 * 864e5);
+        const targetTuesday = new Date(nextTuesday.getTime() + (numWeeks) * 7 * 864e5);
         const tuesdayDate = targetTuesday.toLocaleDateString();
-        return numWeeks < 0 ? `was held last on ${tuesdayDate}` : `will be held next on ${tuesdayDate}`;
+        return `⬑ studying on ${tuesdayDate}`;
       }
     };
-
 
     function setRole() {
       if (role.admin || role.teacher) {
