@@ -6,7 +6,7 @@
     </div>
 
     <AttendanceStats title="Focus Attendance Stats" />
-    <SessionCalendar />
+    <Calendar />
   </div>
 
 </template>
@@ -14,13 +14,13 @@
 <script>
 import { ref } from "vue"; // inject is required for the emitter (EventBus)
 import AttendanceStats from "../../components/AttendanceStats.vue";
-import SessionCalendar from "../../components/SessionCalendar.vue";
+import Calendar from "../../components/Calendar.vue";
 
 
 export default {
   name: "studentCalendarView",
   components: {
-    SessionCalendar,
+    Calendar,
     AttendanceStats
   },
   setup() {

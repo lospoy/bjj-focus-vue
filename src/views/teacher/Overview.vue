@@ -12,7 +12,7 @@
     <div v-if="loadComponent">
       <TopicsChart :id='humanID' />
       <SkillsChart :id='humanID' />
-      <SessionCalendar v-if="sessionData" />
+      <Calendar v-if="sessionData" />
       <AttendanceStats :id='humanID' />
     </div>
 
@@ -22,9 +22,9 @@
 <script>
 import { onMounted, ref, watch } from "vue";
 import AttendanceStats from "../../components/AttendanceStats.vue";
+import Calendar from "../../components/Calendar.vue";
 import SkillsChart from '../../components/Charts/SkillsChart.vue';
 import TopicsChart from '../../components/Charts/TopicsChart.vue';
-import SessionCalendar from "../../components/SessionCalendar.vue";
 import ThisWeek from '../../components/ThisWeek.vue';
 import { getAllFocusLessons } from '../../services/bjj_services/focusLessonService';
 import { getAllActiveHumans, getAllInactiveHumans } from '../../services/humanService';
@@ -36,7 +36,7 @@ import { useUserStore } from '../../store/user';
 export default {
   name: "overview",
   components: {
-    SessionCalendar,
+    Calendar,
     AttendanceStats,
     ThisWeek,
     TopicsChart,
