@@ -29,7 +29,7 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
     const userIsLoggedIn = ref(userStore.user.isLoggedIn);
-    const isLoading = ref(false)
+    const appIsLoaded = ref(false)
 
     //  Checks for user on page load
     if (!userLocal) {
@@ -46,9 +46,7 @@ export default {
         // User is logging in
         // delay navbar/settings button so user cannot click until page fully loaded
         if(newUser.user.isLoggedIn === true) {
-          setTimeout(() => {
-            userIsLoggedIn.value = newUser.user.isLoggedIn;
-          }, 2000);
+          userIsLoggedIn.value = newUser.user.isLoggedIn;
         }
         // User is logging out\
         // get rid of the navbar/settings button immediately
@@ -60,7 +58,7 @@ export default {
     );
 
     return {
-      userLocal, userStore, userIsLoggedIn, isLoading
+      userLocal, userStore, userIsLoggedIn, appIsLoaded
     };
   },
 };
