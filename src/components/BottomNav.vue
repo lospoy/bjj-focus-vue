@@ -1,7 +1,7 @@
 <template>
 
   <!-- STUDENT NAV -->
-  <v-bottom-navigation density="compact" v-if="isStudent" class="bg-med-grey text-light-grey">
+  <v-bottom-navigation density="compact" v-if="isStudent" class="bg-med-grey text-light-grey animate-fadeIn">
     <v-btn value="home" :to="{ name: 'StudentHome' }">
       <v-icon>mdi-home</v-icon>
     </v-btn>
@@ -14,7 +14,7 @@
   </v-bottom-navigation>
 
   <!-- ADMIN NAV -->
-  <v-bottom-navigation density="compact" v-if="isAdmin" class="bg-gold text-dark-grey">
+  <v-bottom-navigation density="compact" v-if="isAdmin" class="bg-gold text-dark-grey animate-fadeIn">
     <v-btn value="overview" :to="{ name: 'Overview' }">
       <v-icon>mdi-home</v-icon>
     </v-btn>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { logoutUser } from '../services/userService';
 import { useUserStore } from "../store/user";
 
@@ -61,7 +61,7 @@ setup() {
     if(userStore.user.role.student) isStudent.value = true
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     checkRole()
   })
 
