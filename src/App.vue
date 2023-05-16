@@ -29,15 +29,7 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
     const userIsLoggedIn = ref(userStore.user.isLoggedIn);
-
-    // Watch userStore.user for changes and update userIsLoggedIn.value
-    watch(
-      () => userStore,
-      (newUser) => {
-        userIsLoggedIn.value = newUser.user.isLoggedIn;
-      },
-      { deep: true }
-    );
+    const isLoading = ref(false)
 
     //  Checks for user on page load
     if (!userLocal) {
@@ -47,8 +39,28 @@ export default {
       router.push({ name: "Loading" })
     }
 
+    // Watch userStore.user for changes and update userIsLoggedIn.value
+    watch(
+      () => userStore,
+      (newUser) => {
+        // User is logging in
+        // delay navbar/settings button so user cannot click until page fully loaded
+        if(newUser.user.isLoggedIn === true) {
+          setTimeout(() => {
+            userIsLoggedIn.value = newUser.user.isLoggedIn;
+          }, 2000);
+        }
+        // User is logging out\
+        // get rid of the navbar/settings button immediately
+        if(newUser.user.isLoggedIn === false) {
+          userIsLoggedIn.value = newUser.user.isLoggedIn;
+        }
+      },
+      { deep: true }
+    );
+
     return {
-      userLocal, userStore, userIsLoggedIn
+      userLocal, userStore, userIsLoggedIn, isLoading
     };
   },
 };
