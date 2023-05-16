@@ -62,7 +62,7 @@ import { useFocusLessonsStore } from '../store/focusLessons';
 import { useSessionsStore } from "../store/sessions";
 
 export default {
-  name: "SessionCalendar",
+  name: "Calendar",
   setup() {
     // Variables
     const errorMsg = ref(null);
