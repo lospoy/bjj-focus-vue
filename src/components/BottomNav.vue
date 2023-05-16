@@ -45,7 +45,6 @@ setup() {
   // Logout function
   const logout = async () => {
     logoutUser();
-    
     setTimeout(() => {
       router.push({ name: "Login" });
     }, 700);
@@ -57,14 +56,15 @@ setup() {
       return
     }
 
-    if(userStore.user.role.admin) isAdmin.value = true
-    if(userStore.user.role.student) isStudent.value = true
+    setTimeout(() => {
+      if(userStore.user.role.admin) isAdmin.value = true
+      if(userStore.user.role.student) isStudent.value = true
+    }, 2000);
   }
 
   onBeforeMount(() => {
     checkRole()
   })
-
 
   return {
     logout,
