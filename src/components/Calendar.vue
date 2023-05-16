@@ -14,26 +14,24 @@
       </v-calendar>
 
     <!-- SESSION CARD -->
-    <div class="p-3 bg-dark-grey rounded-md flex flex-col justify-center" v-if="displaySessionCard">
-
-      <div class="pl-4 px-6 py-6 animate-pulse" v-if="sessionCardSkeleton">
-            <span class="list-inside space-y-1 justify-center">
-              Loading session data
-            </span>
-      </div>
+    <div class="p-3 bg-dark-grey rounded-md flex flex-col justify-center" v-if="sessionTopic">
 
       <!-- SESSION CARD: SELECTED DATE'S DETAILS -->
       <div class="flex flex-col px-2 w-full">
-            <ul class="list-inside space-y-1 self-center" v-if="afterSessionCardSkeleton">
-              <li class="text-3xl text-light-grey uppercase text-center -mb-3">{{ sessionTopic }}</li>
-              <li class="text-sm text-light-grey uppercase text-center">session {{ attendedOrNot }}</li>
+            <ul 
+              class="list-inside space-y-1 self-center uppercase text-center font-kanit"
+              :class="[ attended ? 'text-light-grey' : 'text-med-grey']"
+            >
+              <li class="text-3xl -mb-3">{{ sessionTopic }}</li>
+              <li class="text-sm">session {{ attendedOrNot }}</li>
             </ul>
+            
             <div class="flex flex-col w-full" v-if="attended">
-              
-              <h3 class="text-sm mt-4 text-light-grey">{{ sessionTopic }} curriculum</h3>
-              <div class="pb-2 pl-3 ">
-              <ul id="techniqueList" class="space-y-1 justify-center list-disc">
-                  <li class=" text-gold rounded-md text-sm font-normal" v-for="(item, index) of techniqueList" :key="index">
+              <h3 class="text-sm mt-5 mb-2 text-light-grey font-kanit">Techniques</h3>
+              <div class="pl-3">
+              <ul id="techniqueList" class="space-y-0.5 justify-center list-disc text-sm">
+                <!-- separate li/span to style the bullets and text separately -->
+                  <li class="text-gold" v-for="(item, index) of techniqueList" :key="index">
                     <span class="text-light-grey">{{ item }}</span>
                   </li>
               </ul>
@@ -42,13 +40,13 @@
       </div>
     </div>
 
-    <div class="p-5 bg-dark-grey rounded-md flex flex-col justify-center" v-if="noSessionCard">
-      <span class="text-light-grey flex justify-center">No session on this date</span>
+    <div class="py-3 px-6 bg-dark-grey rounded-md flex flex-col items-center">
+      <ul class="text-sm text-light-grey">
+        <li v-if="noSessionCard">❌ No session on this date</li>
+        <li v-if="!noSessionCard && !displaySessionCard">Click on a date to view more</li>
+      </ul>
     </div>
 
-    <div class="py-3 px-6 bg-dark-grey rounded-md flex flex-col justify-center" v-if="!noSessionCard && !displaySessionCard">
-      <span class="text-light-grey flex justify-center text-sm">Click on a date to view more</span>
-    </div>
   </div>
 </template>
 
@@ -209,6 +207,7 @@ export default {
         if (!sessionOnSelectedDay) {
           displaySessionCard.value = false
           noSessionCard.value = true
+          sessionTopic.value = false
         }
         if (attendedOnSelectedDay) {
           attendedOrNot.value = 'Attended'  // displays text to the user
