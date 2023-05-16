@@ -7,8 +7,8 @@
   </div>
   
   <template v-if="isLoading">
-  <div class="pl-2 px-24 rounded-md justify-center items-center animate-pulse">
-    <ul class="list-inside items-center text-light-grey text-sm">
+  <div class="pl-2 px-24 rounded-md justify-center items-center animate-pulse ">
+    <ul class="list-inside items-center text-light-grey text-sm space-y-0.5">
       <li>You've attended...</li>
       <li>Your most recent session was...</li>
       <li>Your first session was on...</li>
@@ -19,7 +19,7 @@
 
   <template v-else>
   <div class="pl-2 px-2">
-    <ul class="list-inside justify-center text-light-grey text-sm">
+    <ul class="list-inside justify-center text-light-grey text-sm space-y-0.5">
       <li>You've attended {{ focusSessions }} Focus sessions 🥷</li>
       <li>Your most recent session was {{ latestSession }} days ago ⌛</li>
       <li>Your first session was on {{ firstSession }} 🗓️</li>
@@ -96,7 +96,7 @@ setup(props) {
     setTimeout(() => {
       displayStudentData(props.id)
       isLoading.value = false
-    }, 100)
+    }, 70)
   })
 
   return {
