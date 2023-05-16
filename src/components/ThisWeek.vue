@@ -1,10 +1,14 @@
 <template>
-<div class="flex flex-col bg-dark-grey mb-2 p-3 mt-4">
+<div class="flex flex-col bg-dark-grey mb-2 px-3">
 
   <div v-if="isStudent" class="flex flex-col px-4">
-    <ul class="text-5xl uppercase space-y-1.5 leading-8 animate-fadeIn">
-      <li v-for="(el, i) in topicsArr" :key="i" @click="selectTopic(i)">
-        <!-- TOPIC TITLE -->
+    <ul class="text-6xl uppercase leading-10 animate-fadeIn">
+      <li
+        v-for="(el, i) in topicsArr"
+        :key="i"
+        @click="selectTopic(i)"
+        class="py-1"
+      >
         <h2
           class="tracking-tight font-kanit"
           :class="[
@@ -16,8 +20,8 @@
         ]"
         >{{ el.name }}
         </h2>
+
         <!-- INFO UNDER TITLE -->
-        
         <div
           v-if="selectedTopicIndex === i"
           :class="[
