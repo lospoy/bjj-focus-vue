@@ -29,7 +29,6 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
     const userIsLoggedIn = ref(userStore.user.isLoggedIn);
-    const appIsLoaded = ref(false)
 
     //  Checks for user on page load
     if (!userLocal) {
@@ -58,7 +57,7 @@ export default {
     );
 
     return {
-      userLocal, userStore, userIsLoggedIn, appIsLoaded
+      userLocal, userStore, userIsLoggedIn
     };
   },
 };
