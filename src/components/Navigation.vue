@@ -12,10 +12,10 @@
           size="small"
           class="bg-med-grey3 capitalize animate-fadeIn"
           >
-          <v-icon class="text-light-grey translate-y-[1px]">
+          <v-icon class="text-light-grey">
             mdi-account
           </v-icon>
-          <span class="justify-end text-light-grey">{{ humanName }}</span>
+          <span class="justify-end text-light-grey pr-0.5">{{ humanName }}</span>
         </v-btn>
       </div>
     </nav>
