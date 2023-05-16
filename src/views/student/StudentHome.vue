@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-screen-sm mx-auto py-5 px-1 grid place-items-center h-[88vh]">
+  <div class="max-w-screen-sm mx-auto py-5 px-1 grid place-items-center h-[80vh]">
     <!-- Error Handling -->
     <div v-if="errorMsg" class="mb-10 p-4 rounded-md bg-light-grey shadow-lg">
       <p class="text-red-500">{{ errorMsg }}</p>
