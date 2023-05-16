@@ -43,7 +43,6 @@ export default {
       }, 10);
     };
     
-
     // Get human name and ID and set to Store @../../store/user
     async function getHumanNameAndId(humanID) {
         const res = await getHumanByID(humanID)

@@ -1,23 +1,21 @@
 <template>
   <header>
-    <nav
-      class="flex py-3 px-4 sm:flex-row items-center justify-between"
-    >
+    <nav class="flex py-3 px-4 sm:flex-row items-center justify-between">
       <div class="flex items-center w-full">
         <a href="http://www.bjjfocus.com" class="flex-initial">
-            <img class="w-28" src="../assets/vector/default-gold-white.svg" alt="bjj focus logo"/>
+          <img class="w-28" src="../assets/vector/default-gold-white.svg" alt="bjj focus logo"/>
         </a>
         <span class="flex-grow"></span>
         <v-btn
+          v-if="userIsLoggedIn"
           value="Settings" :to="{ name: 'Settings' }"
           size="small"
-          class="bg-med-grey3 capitalize"
-          v-if="userIsLoggedIn"
+          class="bg-med-grey3 capitalize animate-fadeIn"
           >
-          <span class="justify-end text-light-grey">{{ humanName }}</span>
-          <v-icon class="text-light-grey">
+          <v-icon class="text-light-grey translate-y-[1px]">
             mdi-account
           </v-icon>
+          <span class="justify-end text-light-grey">{{ humanName }}</span>
         </v-btn>
       </div>
     </nav>
@@ -32,15 +30,15 @@ export default defineComponent ({
 name: "Navigation",
 setup() {
   const userStore = useUserStore()
-  const userIsLoggedIn = ref(userStore.user.isLoggedIn);
+  const userIsLoggedIn = ref(false);
   const humanName = ref('');
 
   // Watch userStore.user for changes and update userIsLoggedIn.value
   watch(
     () => userStore,
     (newUser) => {
-      userIsLoggedIn.value = newUser.user.isLoggedIn;
       humanName.value = newUser.human.name.first
+      userIsLoggedIn.value = newUser.user.isLoggedIn;
     },
     { deep: true }
   );
