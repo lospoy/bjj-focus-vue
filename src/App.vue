@@ -1,10 +1,10 @@
 <template >
   <v-app>
-  <div class="min-h-screen font-Poppins box-border bg-dark-grey" >
+  <div class="min-h-screen font-Poppins box-border bg-dark-grey">
     <Navigation />
     <BottomNav v-if="userIsLoggedIn" />
     <div>
-      <router-view class="pb-10" />
+      <router-view />
     </div>
   </div>
   </v-app>
