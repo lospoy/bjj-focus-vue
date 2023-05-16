@@ -7,15 +7,17 @@
         </a>
         <span class="flex-grow"></span>
 
-        <v-btn
-          v-if="userIsLoggedIn"
-          value="Settings" :to="{ name: 'Settings' }"
-          size="small"
-          class="bg-med-grey3 capitalize animate-fadeIn min-h-28"
-          >
-          <v-icon class="text-light-grey">mdi-account</v-icon>
-          <span class="justify-end text-light-grey px-0.5">{{ humanName }}</span>
-        </v-btn>
+        <div class="min-h-28 -my-2">
+          <v-btn
+            v-if="userIsLoggedIn"
+            value="Settings" :to="{ name: 'Settings' }"
+            size="small"
+            class="bg-med-grey3 capitalize animate-fadeIn"
+            >
+            <v-icon class="text-light-grey">mdi-account</v-icon>
+            <span class="justify-end text-light-grey px-0.5">{{ humanName }}</span>
+          </v-btn>
+        </div>
 
       </div>
     </nav>
@@ -45,9 +47,16 @@ setup() {
     () => userStore,
     (newUser) => {
       humanName.value = newUser.human.name.first
-      setTimeout(() => {
+
+      if (newUser.user.isLoggedIn === true) {
+        setTimeout(() => {
+          userIsLoggedIn.value = newUser.user.isLoggedIn;
+        }, 800);
+      }
+      if (newUser.user.isLoggedIn === false) {
         userIsLoggedIn.value = newUser.user.isLoggedIn;
-      }, 800);
+      }
+
     },
     { deep: true }
   );
