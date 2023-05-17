@@ -1,8 +1,8 @@
 <template >
   <v-app>
   <div class="min-h-screen font-Poppins box-border bg-dark-grey">
-    <Navigation />
-    <BottomNav v-if="userIsLoggedIn" />
+    <NavigationTop />
+    <NavigationBottom v-if="userIsLoggedIn" />
     <div>
       <router-view />
     </div>
@@ -13,14 +13,14 @@
 <script>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import BottomNav from "./components/BottomNav.vue";
-import Navigation from "./components/Navigation.vue";
+import NavigationBottom from "./components/NavigationBottom.vue";
+import NavigationTop from "./components/NavigationTop.vue";
 import { useUserStore } from "./store/user";
 
 export default {
   components: {
-    BottomNav,
-    Navigation
+    NavigationBottom,
+    NavigationTop
   },
 
   setup() {

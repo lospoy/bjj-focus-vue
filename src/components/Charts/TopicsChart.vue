@@ -108,19 +108,18 @@ export default {
     }
 
     const getLessonData = async() => {
-      const sessions = useSessionsStore().sessions
-      const sessionsPerTopic = sessions.perTopic
+      const sessions = useSessionsStore().sessions.perTopic.attended
 
-      sessionsPerTopic.find(e => e[0] === backControl) ? '' : sessionsPerTopic.push([backControl, 0])
-      sessionsPerTopic.find(e => e[0] === halfGuard) ? '' : sessionsPerTopic.push([halfGuard, 0])
-      sessionsPerTopic.find(e => e[0] === sideControl) ? '' : sessionsPerTopic.push([sideControl, 0])
-      sessionsPerTopic.find(e => e[0] === closedGuard) ? '' : sessionsPerTopic.push([closedGuard, 0])
-      sessionsPerTopic.find(e => e[0] === mount) ? '' : sessionsPerTopic.push([mount, 0])
-      sessionsPerTopic.find(e => e[0] === deLaRiva) ? '' : sessionsPerTopic.push([deLaRiva, 0])
-      sessionsPerTopic.find(e => e[0] === openGuard) ? '' : sessionsPerTopic.push([openGuard, 0])
-      sessionsPerTopic.find(e => e[0] === turtle) ? '' : sessionsPerTopic.push([turtle, 0])
+      sessions.find(e => e[0] === backControl) ? '' : sessions.push([backControl, 0])
+      sessions.find(e => e[0] === halfGuard) ? '' : sessions.push([halfGuard, 0])
+      sessions.find(e => e[0] === sideControl) ? '' : sessions.push([sideControl, 0])
+      sessions.find(e => e[0] === closedGuard) ? '' : sessions.push([closedGuard, 0])
+      sessions.find(e => e[0] === mount) ? '' : sessions.push([mount, 0])
+      sessions.find(e => e[0] === deLaRiva) ? '' : sessions.push([deLaRiva, 0])
+      sessions.find(e => e[0] === openGuard) ? '' : sessions.push([openGuard, 0])
+      sessions.find(e => e[0] === turtle) ? '' : sessions.push([turtle, 0])
 
-      const res = sessionsPerTopic.map(e => [getLessonName(e[0]), e[1]])
+      const res = sessions.map(e => [getLessonName(e[0]), e[1]])
       topicData.value = res
     }
     

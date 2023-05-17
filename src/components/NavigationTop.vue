@@ -29,7 +29,7 @@ import { defineComponent, ref, watch } from 'vue';
 import { useUserStore } from "../store/user";
 
 export default defineComponent ({
-name: "Navigation",
+name: "NavigationTop",
 props: {
   loaded: {
     type: Boolean

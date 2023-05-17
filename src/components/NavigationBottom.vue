@@ -34,7 +34,7 @@ import { logoutUser } from '../services/userService';
 import { useUserStore } from "../store/user";
 
 export default {
-name: "BottomNav",
+name: "NavigationBottom",
 
 setup() {
   // VARIABLES
