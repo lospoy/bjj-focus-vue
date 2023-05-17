@@ -18,7 +18,7 @@
 
 <script>
 import { ref } from "vue";
-import { getFocusLesson } from "../../services/bjj_services/focusLessonService";
+import { useFocusLessonsStore } from '../../store/focusLessons';
 import { useSessionsStore } from "../../store/sessions";
 
 export default {
@@ -30,6 +30,10 @@ export default {
     }
   },
   setup() {
+    // Pinia 
+    const focusStore = useFocusLessonsStore()
+
+    // Chart
     const skillData = ref(null);
     const test1 = ref(null)
     let delayed
@@ -96,15 +100,14 @@ export default {
     // sweep
     // takedown
 
-    const processSkillData = async() => {
-      try {
+    function processSkillData() {
         const sessions = useSessionsStore().sessions
         const sessionsAttendedPerTopic = sessions.perTopic
         // ARRAY OF ARRAYS [string, integer]
         // String: that Focus lesson's ID
         // Integer: number of attended sessions that match the string's topic ID
 
-        const lessons = await Promise.all(sessionsAttendedPerTopic.map(async e => ([await getFocusLesson(e[0]), e[1]])))
+        const lessons = sessionsAttendedPerTopic.map( e => ([focusStore.getLessonByID(e[0]), e[1]]))
         // ARRAY OF ARRAYS [object, integer]
         // Object: that lesson's object
         // Integer: number of attended sessions related to the lesson's object
@@ -145,10 +148,6 @@ export default {
 
         skillData.value = skillData.value.sort((a, b) => b[1] - a[1])
         // SORTS in descending order, from highest to least exposure
-
-      } catch (error) {
-        console.error(error)
-      }
     }
     
     setTimeout(() => {
