@@ -46,7 +46,7 @@ Try out the demo student account at www.bjjfocus.com
 ## Example Screens
 Student side
 <div align="center" padding="0">
-    <img src="https://u.cubeupload.com/aa9988vvb/studentViews.png" width="100%">
+    <img src="https://u.cubeupload.com/aa9988vvb/77bstudentViews.png" width="100%">
 </div>
 <br>
 Admin side
