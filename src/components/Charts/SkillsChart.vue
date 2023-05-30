@@ -102,7 +102,7 @@ export default {
 
     function processSkillData() {
         const sessions = useSessionsStore().sessions
-        const sessionsAttendedPerTopic = sessions.perTopic
+        const sessionsAttendedPerTopic = sessions.perTopic.attended
         // ARRAY OF ARRAYS [string, integer]
         // String: that Focus lesson's ID
         // Integer: number of attended sessions that match the string's topic ID

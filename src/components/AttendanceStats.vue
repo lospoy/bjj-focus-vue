@@ -70,21 +70,23 @@ setup(props) {
     if(humanID) { 
       sessionsStore.getAndSetSessionsData(humanID)
     }
-    
-    latestSession.value = sessions.daysSinceLatest
-    firstSession.value = new Date(sessions.first).toLocaleDateString()
-    focusSessions.value = sessions.focus
 
-    const weeksTrained = sessions.weeksTrained
-    if (weeksTrained < 1) {
-      totalTrained.value = "Just Started!💪"
-    } else if (weeksTrained >= 1 && weeksTrained < 8) {
-      totalTrained.value = `${Math.floor(weeksTrained)} weeks🔥`
-    } else if (weeksTrained >= 8 && weeksTrained < 52) {
-      totalTrained.value = `${Math.floor(weeksTrained/4)} months⚡`
-    } else {
-      totalTrained.value = `${(weeksTrained/4/12).toFixed(2)} years⚡`
-    }    
+    setTimeout(() => {  // giving the server time to come back with the data
+      latestSession.value = sessions.daysSinceLatest
+      firstSession.value = new Date(sessions.first).toLocaleDateString()
+      focusSessions.value = sessions.focus
+
+      const weeksTrained = sessions.weeksTrained
+      if (weeksTrained < 1) {
+        totalTrained.value = "Just Started!💪"
+      } else if (weeksTrained >= 1 && weeksTrained < 8) {
+        totalTrained.value = `${Math.floor(weeksTrained)} weeks🔥`
+      } else if (weeksTrained >= 8 && weeksTrained < 52) {
+        totalTrained.value = `${Math.floor(weeksTrained/4)} months⚡`
+      } else {
+        totalTrained.value = `${(weeksTrained/4/12).toFixed(2)} years⚡`
+      }  
+    }, 500);
   }
   
   const copyIDToClipboard = () => {

@@ -3,7 +3,7 @@
   <div class="min-h-screen font-Poppins box-border bg-dark-grey">
     <NavigationTop />
     <NavigationBottom v-if="userIsLoggedIn" />
-    <div>
+    <div class="mb-10">
       <router-view />
     </div>
   </div>
