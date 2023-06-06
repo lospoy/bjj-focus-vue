@@ -40,7 +40,7 @@ Try out the demo student account at www.bjjfocus.com
 - State management and cached resources with Pinia (Vuex 5)
 - Tailwind, Vuetify, and custom reusable UI components
 - Object-oriented database model design with Mongoose (MongoDB)
-- Security with JWT authentication, redundant input validation, password hashing
+- Security with JWT authentication, input validation, password hashing
 - 11 endpoint RESTful API and respective controllers/router
 
 ## Example Screens
