@@ -42,6 +42,7 @@ Try out the demo student account at www.bjjfocus.com
 - Object-oriented database model design with Mongoose (MongoDB)
 - Security with JWT authentication, input validation, password hashing
 - 11 endpoint RESTful API and respective controllers/router
+- Continuous deployment with Render
 
 ## Example Screens
 Student side
