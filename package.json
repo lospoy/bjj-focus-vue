@@ -8,7 +8,9 @@
     "preview": "vite preview",
     "server": "nodemon backend/server.js",
     "api": "node backend/server.js",
-    "dev": "concurrently \"npm run server\" \"vite\""
+    "dev": "concurrently \"npm run server\" \"vite\"",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "format": "prettier .  --write"
   },
   "dependencies": {
     "@mdi/font": "^7.1.96",
@@ -39,7 +41,12 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "concurrently": "^7.6.0",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-vue": "^9.15.0",
     "nodemon": "^2.0.21",
-    "vite": "^4.1.4"
+    "prettier": "2.8.8",
+    "vite": "^4.1.4",
+    "vite-plugin-eslint": "^1.8.1"
   }
 }
