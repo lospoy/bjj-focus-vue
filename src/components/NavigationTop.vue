@@ -1,7 +1,7 @@
 <template>
   <header>
-    <nav class="flex py-3 px-4 sm:flex-row items-center justify-between">
-      <div class="flex items-center w-full">
+    <nav class="py-3 px-4 max-w-screen-md mx-auto">
+      <div class="flex items-center">
         <a href="http://www.bjjfocus.com" class="flex-initial">
           <img class="w-28" src="../assets/vector/default-gold-white.svg" alt="bjj focus logo"/>
         </a>

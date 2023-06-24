@@ -136,6 +136,8 @@ export default {
 
     // CLICKED SESSION DETAILS
     // DISPLAYS A DIV WITH SESSION DATA IF THE CLICKED DATE IS A FOCUS SESSION DATE
+
+    // **Technique IDs are manually assigned to a Focus Lesson Object**
     const daySelected = day => {
       selectedDay.value = day.date.toISOString().slice(0, 10) // YYYY-MM-DD
       const attendedDates = sessions.attended.map(s => s.when.date.slice(0, 10)) // YYYY-MM-DD
@@ -172,16 +174,16 @@ export default {
         techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Pass from ${positionObject.name.english}`)
       }
       if(moveObject.category.entry) {
-        techniqueList.push(`${variationObject.name.english} Entry ${moveObject.name.english} from ${positionObject.name.english}`)
+        techniqueList.push(`${variationObject.name.english} Entry to ${moveObject.name.english} from ${positionObject.name.english}`)
       }
       if(moveObject.category.escape) {
         techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Escape`)
       }
       if(moveObject.category.submission) {
-        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english}`)
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} from ${positionObject.name.english}`)
       }
       if(moveObject.category.sweep) {
-        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english}`)
+        techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} sweep`)
       }
       if(moveObject.category.takedown && positionObject.name.english === "Standing") {
         techniqueList.push(`${variationObject.name.english} ${moveObject.name.english} Takedown`)
