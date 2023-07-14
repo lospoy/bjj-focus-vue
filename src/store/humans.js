@@ -1,29 +1,40 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
+// These are set in the teacher Overview page
+// @views/teacher/overview.vue
 export const useHumanStore = defineStore('humans', () => {
   const allHumans = ref({})
   const activeHumans = ref({})
   const inactiveHumans = ref({})
 
   function setAllHumans(payload) {
-    if(!payload) { return allHumans.value = null }
+    if (!payload) {
+      return (allHumans.value = null)
+    }
     allHumans.value = payload
   }
 
   function setActiveHumans(payload) {
-    if(!payload) { return activeHumans.value = null }
+    if (!payload) {
+      return (activeHumans.value = null)
+    }
     activeHumans.value = payload
   }
 
   function setInactiveHumans(payload) {
-    if(!payload) { return inactiveHumans.value = null }
+    if (!payload) {
+      return (inactiveHumans.value = null)
+    }
     inactiveHumans.value = payload
   }
 
   return {
-    allHumans, setAllHumans,
-    activeHumans, setActiveHumans,
-    inactiveHumans, setInactiveHumans,
+    allHumans,
+    setAllHumans,
+    activeHumans,
+    setActiveHumans,
+    inactiveHumans,
+    setInactiveHumans
   }
 })
