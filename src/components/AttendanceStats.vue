@@ -83,7 +83,11 @@ export default {
     async function updateActiveStatus(humanID, newStatus) {
       try {
         await updateHuman(humanID, {
-          trainingStatus: { active: newStatus }
+          trainingData: {
+            status: {
+              active: newStatus
+            }
+          }
         })
       } catch (error) {
         errorMsg.value = error.message
@@ -114,11 +118,11 @@ export default {
 
         if (!humanIsActive) {
           updateActiveStatus(humanID, false)
-          console.log('student updated to inactive')
+          console.log('student status updated to inactive')
         }
-        if (humanIsActive) {
+        if (humanIsActive && humanID !== '630e5c2da1c2a0bcf246c383') {
           updateActiveStatus(humanID, true)
-          console.log('student updated to active')
+          console.log('student status updated to active')
         }
 
         latestSession.value = sessions.daysSinceLatest
