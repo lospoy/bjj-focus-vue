@@ -3,18 +3,8 @@
     class="p-5 bg-dark-grey flex flex-col justify-center rounded-md shadow-md items-center animate-fadeIn"
   >
     <div class="flex flex-row gap-x-4 items-center">
-      <h3 v-if="userIsAdmin" class="text-2xl text-light-grey">{{ title }}</h3>
-      <!-- COPY ID -->
-      <v-btn
-        v-if="userIsAdmin && titleIsSet"
-        class="max-w-10 text-xs bg-med-grey max-h-5"
-        compact
-        @click="copyIDToClipboard"
-      >
-        Copy ID
-      </v-btn>
+      <h3 v-if="userIsAdmin" class="text-3xl text-light-grey">{{ title }}</h3>
     </div>
-
     <template v-if="isLoading">
       <div
         class="pl-2 px-24 rounded-md justify-center items-center animate-pulse"
@@ -30,7 +20,7 @@
       </div>
     </template>
 
-    <template v-else>
+    <template v-if="!isLoading && !userIsAdmin">
       <div class="pl-2 px-2">
         <ul
           class="list-inside justify-center text-light-grey text-sm space-y-0.5"
@@ -42,6 +32,133 @@
         </ul>
       </div>
     </template>
+
+    <template v-if="!isLoading && userIsAdmin">
+      <div class="flex space-x-6 p-2">
+        <!-- BUTTON: COPY ID -->
+        <v-btn
+          v-if="userIsAdmin && titleIsSet"
+          class="text-xs bg-med-grey max-h-6"
+          compact
+          @click="copyIDToClipboard"
+        >
+          Copy ID
+        </v-btn>
+
+        <!-- BUTTON: EDIT  -->
+        <v-btn
+          v-if="userIsAdmin && titleIsSet"
+          class="text-xs bg-med-grey max-h-6"
+          @click="toggleExtendStats"
+          @keydown.space.prevent="toggleExtendStats"
+        >
+          <v-icon class="text-md">mdi-pencil-outline</v-icon>
+        </v-btn>
+      </div>
+
+      <!-- STATS: BASIC INFO -->
+      <div
+        v-if="!extendToggled"
+        class="mt-1.5 px-2 space-x-9 text-sm text-light-grey"
+      >
+        {{ getBeltData(humanID) }}
+        <div class="flex space-x-6">
+          <ul class="flex flex-col space-y-0.5">
+            <li>Latest session</li>
+            <li>Attended</li>
+          </ul>
+          <ul class="flex flex-col space-y-0.5">
+            <li>{{ latestSession }} days ago ⌛</li>
+            <li>{{ focusSessions }} focus sessions</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STATS: EXTENDED INFO -->
+      <div v-if="extendToggled" class="mt-1.5 px-12 text-sm text-light-grey">
+        <div class="flex space-x-6">
+          <ul class="flex flex-col space-y-0.5">
+            <li>Latest session</li>
+            <li>Attended</li>
+            <li>Focus training</li>
+            <li>Total trained</li>
+            <li>Joined focus on</li>
+          </ul>
+          <ul class="flex flex-col space-y-0.5">
+            <li>{{ latestSession }} days ago ⌛</li>
+            <li>{{ focusSessions }} focus sessions</li>
+            <li>{{ totalTrained }}</li>
+            <li>{{ totalTrained }}</li>
+            <li>{{ firstSession }}</li>
+          </ul>
+        </div>
+
+        <!-- BELT HISTORY -->
+        <div class="mt-3">
+          <ul v-for="(belt, index) in beltHistory" :key="index" class="flex">
+            <li class="flex-1">
+              {{ Object.keys(belt.color)[0] }}
+            </li>
+            <li class="flex-1">{{ Object.keys(belt.stripes)[0] }}</li>
+            <li class="flex-1">
+              {{ belt.dateAwarded.split('T')[0] }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- UPDATE BELT FORM -->
+        <form
+          @submit.prevent="beltToAPI"
+          class="flex flex-col text-sm gap-y-1 w-full mt-4 text-light-grey"
+        >
+          <!-- BELT -->
+          <div class="flex flex-col">
+            <select
+              required
+              class="p-2 focus:outline-transparent bg-med-grey rounded-sm"
+              id="belt"
+              v-model="beltOption"
+            >
+              <option :value="white">white</option>
+              <option :value="blue">blue</option>
+              <option :value="purple">purple</option>
+              <option :value="brown">brown</option>
+              <option :value="black">black</option>
+            </select>
+          </div>
+
+          <!-- STRIPES -->
+          <div class="flex flex-col">
+            <select
+              class="p-2 focus:outline-transparent bg-med-grey rounded-sm"
+              id="stripe"
+              v-model="stripeOption"
+            >
+              <option :value="one">one</option>
+              <option :value="two">two</option>
+              <option :value="three">three</option>
+              <option :value="four">four</option>
+            </select>
+          </div>
+
+          <!-- DATE -->
+          <div class="flex flex-col -mb-4">
+            <input
+              type="date"
+              class="p-2 focus:outline-transparent bg-med-grey rounded-sm"
+              id="date"
+              v-model="beltDate"
+            />
+          </div>
+
+          <Button
+            :title="buttonTitle"
+            :color="buttonColor"
+            @click="beltToAPI(humanID)"
+          />
+        </form>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -49,10 +166,15 @@
 import { onMounted, ref } from 'vue'
 import { useSessionsStore } from '../store/sessions'
 import { useUserStore } from '../store/user'
+import { useHumanStore } from '../store/humans'
 import { updateHuman } from '../services/humanService'
+import Button from '../components/Button.vue'
 
 export default {
   name: 'AttendanceStats',
+  components: {
+    Button
+  },
   props: {
     title: {
       type: String,
@@ -67,18 +189,73 @@ export default {
     // PINIA
     const sessionsStore = useSessionsStore()
     const sessions = sessionsStore.sessions
+    const humanStore = useHumanStore()
+    const activeHumans = humanStore.activeHumans
     const userStore = useUserStore()
     const userIsAdmin = userStore.user.role.admin
 
     // Variables
     const errorMsg = ref(null)
+    const isLoading = ref(true)
+    const humanID = ref(props.id)
+    const titleIsSet = ref(props.title)
+    // STATS
     const focusSessions = ref(null)
     const totalTrained = ref(null)
     const firstSession = ref(null)
     const latestSession = ref(null)
-    const humanID = ref(props.id)
-    const titleIsSet = ref(props.title)
-    const isLoading = ref(true)
+    const extendToggled = ref(false)
+
+    // BELT
+    const beltHistory = ref([])
+    const beltDate = ref(null)
+    const beltOption = ref(null)
+    const stripeOption = ref(null)
+
+    const white = { white: true }
+    const blue = { blue: true }
+    const purple = { purple: true }
+    const brown = { brown: true }
+    const black = { black: true }
+
+    const one = { one: true }
+    const two = { two: true }
+    const three = { three: true }
+    const four = { four: true }
+
+    // UPDATE BELT -> update human object and send PUT call to API
+    // @'../../services/humanService'
+    // PUT to api/human/:id
+    const beltToAPI = async (id) => {
+      try {
+        const res = await updateHuman(id, {
+          trainingData: {
+            status: human.trainingData.status,
+            belt: {
+              history: beltHistory.push({
+                dateAwarded: beltDate,
+                color: {
+                  beltOption
+                },
+                stripes: {
+                  stripeOption
+                }
+              })
+            }
+          }
+        })
+        if (res.status === 201) {
+          await buttonSuccess()
+        } else {
+          console.log('did not work')
+        } // Success button visual feedback
+      } catch (error) {
+        errorMsg.value = error.message
+        setTimeout(() => {
+          errorMsg.value = null
+        }, 5000)
+      }
+    }
 
     async function updateActiveStatus(humanID, newStatus) {
       try {
@@ -86,7 +263,8 @@ export default {
           trainingData: {
             status: {
               active: newStatus
-            }
+            },
+            belt: human.trainingData.belt
           }
         })
       } catch (error) {
@@ -146,6 +324,36 @@ export default {
       navigator.clipboard.writeText(humanID.value)
     }
 
+    function toggleExtendStats() {
+      extendToggled.value = !extendToggled.value
+    }
+
+    function getBeltData(id) {
+      const thisHuman = activeHumans.find((human) => human._id === id)
+      const beltData = thisHuman.trainingData.belt
+      if (beltData) {
+        beltHistory.value = beltData.history.sort((a, b) =>
+          b.dateAwarded.localeCompare(a.dateAwarded)
+        )
+      }
+    }
+
+    // BUTTON success visual feedback
+    let buttonColor = ref(null)
+    let buttonTitle = ref('Save')
+    const buttonSuccess = async () => {
+      buttonTitle.value = 'Saving Session...'
+      buttonColor.value = 'orange'
+      setTimeout(() => {
+        buttonTitle.value = 'Session Saved'
+        buttonColor.value = '#33872a'
+      }, 900)
+      setTimeout(() => {
+        buttonTitle.value = 'Save'
+        buttonColor.value = ''
+      }, 2500)
+    }
+
     onMounted(() => {
       // Skeleton while fetching data
       setTimeout(() => {
@@ -165,7 +373,30 @@ export default {
       humanID,
       copyIDToClipboard,
       userIsAdmin,
-      titleIsSet
+      titleIsSet,
+      // BELT
+      extendToggled,
+      toggleExtendStats,
+      beltHistory,
+      getBeltData,
+      beltToAPI,
+      // Button
+      buttonColor,
+      buttonTitle,
+      buttonSuccess,
+      // BELT OPTIONS
+      white,
+      blue,
+      purple,
+      brown,
+      black,
+      one,
+      two,
+      three,
+      four,
+      beltOption,
+      stripeOption,
+      beltDate
     }
   }
 }
