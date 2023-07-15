@@ -54,76 +54,30 @@ const humanSchema = mongoose.Schema(
           }
         },
         belt: {
-          current: {
-            color: {
+          type: Object,
+          required: false,
+          properties: {
+            history: {
               type: Object,
               required: false,
               properties: {
-                white: {
-                  type: Boolean,
-                  required: false
-                },
-                blue: {
-                  type: Boolean,
-                  required: false
-                },
-                purple: {
-                  type: Boolean,
-                  required: false
-                },
-                brown: {
-                  type: Boolean,
-                  required: false
-                },
-                black: {
-                  type: Boolean,
-                  required: false
-                }
+                // dateAwarded: Date
+                // color: {purple: true}
+                // stripes: {one: true}
               }
-            },
-            stripes: {
-              type: Object,
-              required: false,
-              properties: {
-                one: {
-                  type: Boolean,
-                  required: false
-                },
-                two: {
-                  type: Boolean,
-                  required: false
-                },
-                three: {
-                  type: Boolean,
-                  required: false
-                },
-                four: {
-                  type: Boolean,
-                  required: false
-                }
-              }
-            },
-            dateAwarded: {
-              type: Date,
-              required: true
             }
-          },
-          history: {
-            type: Object,
-            required: false,
-            properties: {}
           }
         }
-      }
-    },
-    crm: {
-      type: Object,
-      required: false,
-      properties: {
-        id: {
-          type: String,
-          required: [true, 'crm.id required'],
-          unique: true
+      },
+      crm: {
+        type: Object,
+        required: false,
+        properties: {
+          id: {
+            type: String,
+            required: [true, 'crm.id required'],
+            unique: true
+          }
         }
       }
     }
