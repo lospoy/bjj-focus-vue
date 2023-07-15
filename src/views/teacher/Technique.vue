@@ -75,7 +75,7 @@
 
   <div class="max-w-screen-sm mx-auto px-4 py-10 text-light-grey">
     <div class="p-8 flex flex-col rounded-md shadow-lg">
-      <h2 class="text-2xl mb-4 self-center">All Techniques</h2>
+      <h2 class="text-3xl mb-4 self-center">All Techniques</h2>
       <div class="flex flex-col mb-6">
         <label for="passList" class="mb-1 text-xl">Pass</label>
         <ul id="passList">
