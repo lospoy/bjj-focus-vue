@@ -106,11 +106,7 @@ const getAllHumans = asyncHandler(async (req, res) => {
 // @access  Private
 const getAllActiveHumans = asyncHandler(async (req, res) => {
   const allActiveHumans = await Human.find({
-    trainingData: {
-      status: {
-        active: true
-      }
-    }
+    'trainingData.status.active': { $eq: true }
   })
 
   // Check for user permission
