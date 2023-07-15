@@ -101,7 +101,7 @@
             </li>
             <li class="flex-1">{{ Object.keys(belt.stripes)[0] }}</li>
             <li class="flex-1">
-              {{ belt.dateAwarded.split('T')[0] }}
+              {{ belt.dateAwarded }}
             </li>
           </ul>
         </div>
@@ -117,7 +117,7 @@
               required
               class="p-2 focus:outline-transparent bg-med-grey rounded-sm"
               id="belt"
-              v-model="beltOption"
+              v-model="selectedBelt"
             >
               <option :value="white">white</option>
               <option :value="blue">blue</option>
@@ -131,8 +131,8 @@
           <div class="flex flex-col">
             <select
               class="p-2 focus:outline-transparent bg-med-grey rounded-sm"
-              id="stripe"
-              v-model="stripeOption"
+              id="stripes"
+              v-model="selectedStripes"
             >
               <option :value="one">one</option>
               <option :value="two">two</option>
@@ -147,15 +147,11 @@
               type="date"
               class="p-2 focus:outline-transparent bg-med-grey rounded-sm"
               id="date"
-              v-model="beltDate"
+              v-model="selectedDate"
             />
           </div>
 
-          <Button
-            :title="buttonTitle"
-            :color="buttonColor"
-            @click="beltToAPI(humanID)"
-          />
+          <Button :title="buttonTitle" :color="buttonColor" />
         </form>
       </div>
     </template>
@@ -189,10 +185,8 @@ export default {
     // PINIA
     const sessionsStore = useSessionsStore()
     const sessions = sessionsStore.sessions
-    const humanStore = useHumanStore()
-    const activeHumans = humanStore.activeHumans
-    const userStore = useUserStore()
-    const userIsAdmin = userStore.user.role.admin
+    const activeHumans = useHumanStore().activeHumans
+    const userIsAdmin = useUserStore().user.role.admin
 
     // Variables
     const errorMsg = ref(null)
@@ -208,9 +202,9 @@ export default {
 
     // BELT
     const beltHistory = ref([])
-    const beltDate = ref(null)
-    const beltOption = ref(null)
-    const stripeOption = ref(null)
+    const selectedBelt = ref(null)
+    const selectedStripes = ref(null)
+    const selectedDate = ref(null)
 
     const white = { white: true }
     const blue = { blue: true }
@@ -226,25 +220,24 @@ export default {
     // UPDATE BELT -> update human object and send PUT call to API
     // @'../../services/humanService'
     // PUT to api/human/:id
-    const beltToAPI = async (id) => {
+    async function beltToAPI() {
       try {
-        const res = await updateHuman(id, {
+        const res = await updateHuman(humanID.value, {
           trainingData: {
-            status: human.trainingData.status,
+            status: { active: true },
             belt: {
-              history: beltHistory.push({
-                dateAwarded: beltDate,
-                color: {
-                  beltOption
-                },
-                stripes: {
-                  stripeOption
+              history: [
+                ...beltHistory.value,
+                {
+                  dateAwarded: selectedDate.value,
+                  color: selectedBelt.value,
+                  stripes: selectedStripes.value
                 }
-              })
+              ]
             }
           }
         })
-        if (res.status === 201) {
+        if (res.status === 200) {
           await buttonSuccess()
         } else {
           console.log('did not work')
@@ -342,10 +335,10 @@ export default {
     let buttonColor = ref(null)
     let buttonTitle = ref('Save')
     const buttonSuccess = async () => {
-      buttonTitle.value = 'Saving Session...'
+      buttonTitle.value = 'Saving Promotion...'
       buttonColor.value = 'orange'
       setTimeout(() => {
-        buttonTitle.value = 'Session Saved'
+        buttonTitle.value = 'Promotion Saved'
         buttonColor.value = '#33872a'
       }, 900)
       setTimeout(() => {
@@ -394,9 +387,9 @@ export default {
       two,
       three,
       four,
-      beltOption,
-      stripeOption,
-      beltDate
+      selectedBelt,
+      selectedStripes,
+      selectedDate
     }
   }
 }
