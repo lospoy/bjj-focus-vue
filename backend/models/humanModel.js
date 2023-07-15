@@ -36,7 +36,7 @@ const humanSchema = mongoose.Schema(
       properties: {
         status: {
           type: Object,
-          required: [true, 'Current training status required.'],
+          required: true,
           properties: {
             active: {
               type: Boolean,

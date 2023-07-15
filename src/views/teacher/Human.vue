@@ -10,9 +10,7 @@
       @submit.prevent="newHuman"
       class="p-8 flex flex-col bg-light-grey rounded-md shadow-lg"
     >
-      <h1 class="text-3xl text-at-light-orange mb-4 self-center">
-        New Human</h1
-      >
+      <h1 class="text-3xl text-at-light-orange mb-4 self-center">New Human</h1>
 
       <div class="flex flex-col mb-2">
         <label for="firstName" class="mb-1 text-sm text-at-light-orange"
@@ -40,72 +38,78 @@
         />
       </div>
 
-      <Button :title='buttonTitle' :color='buttonColor' />
+      <Button :title="buttonTitle" :color="buttonColor" />
     </form>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import Button from "../../components/Button.vue";
-import { createHuman } from "../../services/humanService";
+import { ref } from 'vue'
+import Button from '../../components/Button.vue'
+import { createHuman } from '../../services/humanService'
 
 export default {
-name: "Human",
-components: {
-  Button,
-},
-setup() {
-  // Variables
-  const errorMsg = ref(null);
-  const firstName = ref(null);
-  const lastName = ref(null);
-  let buttonColor = ref(null)
-  let buttonTitle = ref("Save Human")
+  name: 'Human',
+  components: {
+    Button
+  },
+  setup() {
+    // Variables
+    const errorMsg = ref(null)
+    const firstName = ref(null)
+    const lastName = ref(null)
+    let buttonColor = ref(null)
+    let buttonTitle = ref('Save Human')
 
     // Button success visual feedback
     const buttonSuccess = async () => {
-        buttonTitle.value = "Saving Human..."
-        buttonColor.value = "orange"
-        setTimeout(() => {
-            buttonTitle.value = "Human Saved"
-            buttonColor.value = "#33872a"
-        }, 900);
-        setTimeout(() => {
-            buttonTitle.value = "Save Human"
-            buttonColor.value = ""
-        }, 2500);
+      buttonTitle.value = 'Saving Human...'
+      buttonColor.value = 'orange'
+      setTimeout(() => {
+        buttonTitle.value = 'Human Saved'
+        buttonColor.value = '#33872a'
+      }, 900)
+      setTimeout(() => {
+        buttonTitle.value = 'Save Human'
+        buttonColor.value = ''
+      }, 2500)
     }
 
-  // New Human function
-  async function newHuman() {
+    // New Human function
+    async function newHuman() {
       try {
-        
         const res = await createHuman({
           name: {
-              first: firstName.value,
-              last: lastName.value,
+            first: firstName.value,
+            last: lastName.value
+          },
+          trainingData: {
+            status: { active: true }
           }
-        });
-        
-        if(res.status === 201) { // Success button visual feedback
+        })
+
+        if (res.status === 201) {
+          // Success button visual feedback
           await buttonSuccess()
         }
-
       } catch (error) {
-        errorMsg.value = "Error: human with that exact name already exists in the database";
+        errorMsg.value =
+          'Error: human with that exact name already exists in the database'
         setTimeout(() => {
-          errorMsg.value = null;
-        }, 5000);
+          errorMsg.value = null
+        }, 5000)
       }
-      
-      return;
-  };
-  return {
-    errorMsg,
-    firstName, lastName, newHuman,
-    buttonTitle, buttonColor
+
+      return
+    }
+    return {
+      errorMsg,
+      firstName,
+      lastName,
+      newHuman,
+      buttonTitle,
+      buttonColor
+    }
   }
-},
-};
+}
 </script>

@@ -29,8 +29,8 @@ const registerHuman = asyncHandler(async (req, res) => {
       first,
       last
     },
-    trainingStatus: {
-      active: true
+    trainingData: {
+      status: { active: true }
     },
     createdBy: req.user.id
   })
@@ -46,8 +46,8 @@ const registerHuman = asyncHandler(async (req, res) => {
         first: human.name.first,
         last: human.name.last
       },
-      trainingStatus: {
-        active: true
+      trainingData: {
+        status: { active: true }
       },
       createdBy: req.user.id
     })
