@@ -99,7 +99,9 @@
             <li class="flex-1">
               {{ Object.keys(belt.color)[0] }}
             </li>
-            <li class="flex-1">{{ Object.keys(belt.stripes)[0] }}</li>
+            <li v-if="belt.stripes" class="flex-1">
+              {{ Object.keys(belt.stripes)[0] }}
+            </li>
             <li class="flex-1">
               {{ belt.dateAwarded }}
             </li>
@@ -163,7 +165,7 @@ import { onMounted, ref } from 'vue'
 import { useSessionsStore } from '../store/sessions'
 import { useUserStore } from '../store/user'
 import { useHumanStore } from '../store/humans'
-import { updateHuman } from '../services/humanService'
+import { getHumanByID, updateHuman } from '../services/humanService'
 import Button from '../components/Button.vue'
 
 export default {
@@ -185,7 +187,7 @@ export default {
     // PINIA
     const sessionsStore = useSessionsStore()
     const sessions = sessionsStore.sessions
-    const activeHumans = useHumanStore().activeHumans
+    const allHumans = useHumanStore().allHumans
     const userIsAdmin = useUserStore().user.role.admin
 
     // Variables
@@ -251,15 +253,19 @@ export default {
     }
 
     async function updateActiveStatus(humanID, newStatus) {
-      try {
-        await updateHuman(humanID, {
-          trainingData: {
-            status: {
-              active: newStatus
-            },
-            belt: human.trainingData.belt
+      const human = await getHumanByID(humanID)
+      const updatedHuman = {
+        ...human,
+        trainingData: {
+          ...human.trainingData,
+          status: {
+            active: newStatus
           }
-        })
+        }
+      }
+
+      try {
+        await updateHuman(humanID, updatedHuman)
       } catch (error) {
         errorMsg.value = error.message
         setTimeout(() => {
@@ -291,7 +297,7 @@ export default {
           updateActiveStatus(humanID, false)
           console.log('student status updated to inactive')
         }
-        if (humanIsActive && humanID !== '630e5c2da1c2a0bcf246c383') {
+        if (humanIsActive) {
           updateActiveStatus(humanID, true)
           console.log('student status updated to active')
         }
@@ -322,9 +328,9 @@ export default {
     }
 
     function getBeltData(id) {
-      const thisHuman = activeHumans.find((human) => human._id === id)
-      const beltData = thisHuman.trainingData.belt
-      if (beltData) {
+      const thisHuman = allHumans.find((human) => human._id === id)
+      if (thisHuman.trainingData?.belt) {
+        const beltData = thisHuman.trainingData.belt
         beltHistory.value = beltData.history.sort((a, b) =>
           b.dateAwarded.localeCompare(a.dateAwarded)
         )
